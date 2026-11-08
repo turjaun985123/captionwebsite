@@ -1,0 +1,18 @@
+<button class="sticky toggle-nav-sidebar" id="toggle-nav-sidebar" aria-label="{% if LANGUAGE_CODE == 'en' %}Toggle navigation{% else %}নেভিগেশন দেখান বা লুকান{% endif %}"><svg class="icon"><use href="#lucide-menu"></use></svg></button>
+<nav class="sticky studio-sidebar" id="nav-sidebar" aria-label="{% if LANGUAGE_CODE == 'en' %}Main navigation{% else %}প্রধান নেভিগেশন{% endif %}">
+  <a class="studio-sidebar-brand" href="{% url 'admin:index' %}"><span class="studio-sidebar-mark"><svg class="icon"><use href="#lucide-pen-line"></use></svg></span><span><strong>কথার ঘর</strong><small>{% if LANGUAGE_CODE == 'en' %}CONTENT STUDIO{% else %}কন্টেন্ট স্টুডিও{% endif %}</small></span></a>
+  <label class="visually-hidden" for="nav-filter">{% if LANGUAGE_CODE == 'en' %}Filter navigation{% else %}নেভিগেশন খুঁজুন{% endif %}</label><input id="nav-filter" type="search" placeholder="{% if LANGUAGE_CODE == 'en' %}Find a page{% else %}পেজ খুঁজুন{% endif %}" autocomplete="off">
+  <span class="studio-sidebar-label">{% if LANGUAGE_CODE == 'en' %}WORKSPACE{% else %}কাজের জায়গা{% endif %}</span>
+  <a class="studio-nav-link{% if request.resolver_match.url_name == 'index' %} active{% endif %}" href="{% url 'admin:index' %}"><svg class="icon"><use href="#lucide-layout-dashboard"></use></svg>{% if LANGUAGE_CODE == 'en' %}Overview{% else %}ওভারভিউ{% endif %}</a>
+  {% for app in available_apps %}
+    {% if app.app_label == 'captions' %}
+      {% for model in app.models %}<a class="studio-nav-link{% if request.resolver_match.url_name == 'captions_caption_changelist' %} active{% endif %}" href="{{ model.admin_url }}"><svg class="icon"><use href="#lucide-files"></use></svg>{% if LANGUAGE_CODE == 'en' %}Captions{% else %}ক্যাপশনসমূহ{% endif %}</a>{% endfor %}
+    {% endif %}
+  {% endfor %}
+  {% for app in available_apps %}
+    {% if app.app_label == 'auth' %}<span class="studio-sidebar-label team-label">{% if LANGUAGE_CODE == 'en' %}ACCESS{% else %}প্রবেশাধিকার{% endif %}</span>{% for model in app.models %}<a class="studio-nav-link{% if model.object_name == 'User' %} team-user{% endif %}" href="{{ model.admin_url }}"><svg class="icon"><use href="#lucide-users"></use></svg>{% if LANGUAGE_CODE == 'en' %}{% if model.object_name == 'User' %}Users{% elif model.object_name == 'Group' %}Groups{% else %}{{ model.name }}{% endif %}{% else %}{{ model.name }}{% endif %}</a>{% endfor %}{% endif %}
+  {% endfor %}
+  {% if perms.captions.add_caption %}<a class="studio-sidebar-add" href="{% url 'admin:captions_caption_add' %}"><svg class="icon"><use href="#lucide-plus"></use></svg>{% if LANGUAGE_CODE == 'en' %}New caption{% else %}নতুন ক্যাপশন{% endif %}</a>{% endif %}
+  <div class="studio-sidebar-bottom"><svg class="icon"><use href="#lucide-check-circle"></use></svg>{% if LANGUAGE_CODE == 'en' %}Caption publishing{% else %}ক্যাপশন প্রকাশনা{% endif %}</div>
+</nav>
+<script>localStorage.setItem('django.admin.navSidebarIsOpen',window.matchMedia('(max-width: 760px)').matches?'false':'true')</script>

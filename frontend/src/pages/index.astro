@@ -1,0 +1,155 @@
+---
+import '../styles/global.css';
+const apiUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000/api';
+const adminUrl = import.meta.env.PUBLIC_ADMIN_URL || '/admin/';
+---
+<html lang="bn-BD">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f3e9" />
+    <meta name="description" content="প্রতিটি দিনের জন্য মনের মতো বাংলা ক্যাপশন।" />
+    <title>কথার ঘর — মনের মতো বাংলা ক্যাপশন</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow"><i class="fa-solid fa-feather-pointed" aria-hidden="true"></i> মনের কথা, নিজের ভাষায়</p>
+          <h1>মনের কথা<br /><em>ক্যাপশনে</em> বলি।</h1>
+          <p class="hero-text">ছবি, অনুভূতি কিংবা বিশেষ মুহূর্ত—আপনার কথাটি খুঁজে নিন সহজে।</p>
+          <a class="hero-cta" href="#captions">ক্যাপশন খুঁজুন <i class="fa-solid fa-arrow-down" aria-hidden="true"></i></a>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+          <div class="sun"></div><div class="flower flower-one"><i class="fa-solid fa-fan" aria-hidden="true"></i></div><div class="flower flower-two"><i class="fa-solid fa-circle" aria-hidden="true"></i></div>
+          <div class="floating-note note-back"><i class="fa-solid fa-star tiny-star" aria-hidden="true"></i><span>নিজের মতো থাকাটাই<br />সবচেয়ে সুন্দর</span><small>— ছোট্ট মনে করিয়ে</small></div>
+          <div class="floating-note note-front"><i class="fa-solid fa-quote-left note-quote" aria-hidden="true"></i><p>স্মৃতি জমাও,<br />জিনিস নয়।</p><i class="fa-regular fa-heart note-heart" aria-hidden="true"></i></div>
+          <div class="art-caption">বাংলায় মনের মতো কথা <i class="fa-solid fa-sparkles" aria-hidden="true"></i></div>
+        </div>
+        <div class="hero-stats"><div><strong id="total-count">—</strong><span>টি ক্যাপশন</span></div><i></i><div><strong><i class="fa-solid fa-pen-nib" aria-hidden="true"></i></strong><span>নিজের ভাষায়</span></div><i></i><div><strong><i class="fa-solid fa-heart" aria-hidden="true"></i></strong><span>আপনার জন্য</span></div></div>
+      </section>
+
+      <section class="collection" id="captions">
+        <div class="section-heading"><div><p class="eyebrow">আপনার কথার খোঁজে</p><h2>মনের মতো <em>ক্যাপশন।</em></h2></div><p class="section-note">পছন্দের কথাগুলো রেখে দিন।<br />ভালো লাগলে সবার সঙ্গে ভাগ করুন।</p></div>
+        <div class="toolbar">
+          <div class="filter-tools"><div class="filters" id="filters" aria-label="বিষয় অনুযায়ী ক্যাপশন"><button class="filter-chip selected" data-category="All">সব ক্যাপশন</button></div><button class="filter-chip saved-filter" id="saved-filter"><i class="fa-regular fa-bookmark" aria-hidden="true"></i> পছন্দের <span id="saved-count">০</span></button></div>
+          <label class="search-box"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="search" type="search" placeholder="ক্যাপশন খুঁজুন..." aria-label="ক্যাপশন খুঁজুন" /></label>
+        </div>
+        <div class="results-line"><span id="result-count">ক্যাপশন খোঁজা হচ্ছে...</span><button id="clear-search" class="clear-search" hidden>মুছে ফেলুন <i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
+        <div class="caption-grid" id="caption-grid" aria-live="polite"></div>
+        <div class="empty-state" id="empty-state" hidden><i class="fa-solid fa-feather-pointed" aria-hidden="true"></i><h3>কোনো ক্যাপশন পাওয়া যায়নি।</h3><p>অন্য শব্দ দিয়ে খুঁজে দেখুন।</p></div>
+        <div class="load-error" id="load-error" hidden>ক্যাপশন লোড করা যায়নি। সার্ভার চালু আছে কি না দেখে <button id="retry">আবার চেষ্টা করুন</button>।</div>
+      </section>
+      <section class="closing"><i class="fa-solid fa-fan closing-flower" aria-hidden="true"></i><p>মনের কথা ছড়িয়ে পড়ুক সবার মাঝে।</p><span class="closing-small">নতুন কথার খোঁজে আবার আসুন।</span></section>
+    </main>
+    <footer><a class="brand footer-brand" href="/"><span class="brand-mark"><i class="fa-solid fa-pen-nib" aria-hidden="true"></i></span><span>কথার ঘর</span></a><span>আপনার অনুভূতির জন্য, আপনার ভাষায়। <i class="fa-solid fa-heart" aria-hidden="true"></i></span><a href={adminUrl} target="_blank" rel="noreferrer">নতুন ক্যাপশন যোগ করুন <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a></footer>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script define:vars={{ apiUrl }}>
+      const API = apiUrl.replace(/\/$/, '');
+      const grid = document.querySelector('#caption-grid');
+      const filters = document.querySelector('#filters');
+      const search = document.querySelector('#search');
+      const empty = document.querySelector('#empty-state');
+      const errorBox = document.querySelector('#load-error');
+      const resultCount = document.querySelector('#result-count');
+      const clearSearch = document.querySelector('#clear-search');
+      const savedCount = document.querySelector('#saved-count');
+      const saved = new Set(JSON.parse(localStorage.getItem('little-lines-saved') || '[]'));
+      const liked = new Set(JSON.parse(localStorage.getItem('little-lines-liked') || '[]'));
+      let activeCategory = 'All';
+      let showingSaved = false;
+      let captions = [];
+      let toastTimer;
+      const categoryNames = { 'All': 'সব ক্যাপশন', 'Everyday': 'প্রতিদিন', 'Self-love': 'আত্মভালোবাসা', 'Travel': 'ভ্রমণ', 'Friendship': 'বন্ধুত্ব', 'Mood': 'অনুভূতি' };
+      const bn = (value) => new Intl.NumberFormat('bn-BD').format(value);
+      const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+      const persist = (key, set) => localStorage.setItem(key, JSON.stringify([...set]));
+      function notify(message) {
+        const toast = document.querySelector('#toast'); toast.textContent = message; toast.classList.add('visible');
+        clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('visible'), 2200);
+      }
+      function updateSavedCount() { savedCount.textContent = bn(saved.size); }
+      function render(items) {
+        grid.innerHTML = items.map((item, index) => `
+          <article class="caption-card ${item.featured ? 'featured' : ''}" style="--card-index:${index % 8}">
+            <div class="card-top"><span class="category-label"><i></i>${esc(item.category)}</span>${item.featured ? '<span class="featured-label"><i class="fa-solid fa-star" aria-hidden="true"></i> বাছাই করা</span>' : ''}</div>
+            <p class="caption-text">${esc(item.text)}</p>
+            <div class="card-bottom"><span class="author">${item.author ? `— ${esc(item.author)}` : 'মনের কথা, নিজের ভাষায়'}</span><div class="card-actions">
+              <button class="icon-action like-button ${liked.has(item.id) ? 'is-liked' : ''}" data-action="like" data-id="${item.id}" aria-label="ভালো লাগল" title="ভালো লাগল"><i class="fa-${liked.has(item.id) ? 'solid' : 'regular'} fa-heart" aria-hidden="true"></i><small>${bn(item.likes)}</small></button>
+              <button class="icon-action ${saved.has(item.id) ? 'is-saved' : ''}" data-action="save" data-id="${item.id}" aria-label="পছন্দে রাখুন" title="পছন্দে রাখুন"><i class="fa-${saved.has(item.id) ? 'solid' : 'regular'} fa-bookmark" aria-hidden="true"></i></button>
+              <button class="icon-action" data-action="copy" data-id="${item.id}" aria-label="কপি করুন" title="কপি করুন"><i class="fa-regular fa-copy" aria-hidden="true"></i></button>
+              <button class="icon-action" data-action="share" data-id="${item.id}" aria-label="শেয়ার করুন" title="শেয়ার করুন"><i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i></button>
+            </div></div>
+          </article>`).join('');
+        empty.hidden = items.length > 0;
+      }
+      function renderCurrent() {
+        const items = showingSaved ? captions.filter((item) => saved.has(item.id)) : captions;
+        render(items);
+        if (showingSaved) resultCount.textContent = `${bn(items.length)}টি পছন্দের ক্যাপশন`;
+      }
+      async function load() {
+        errorBox.hidden = true;
+        resultCount.textContent = 'ক্যাপশন খোঁজা হচ্ছে...';
+        const params = new URLSearchParams();
+        if (search.value.trim()) params.set('q', search.value.trim());
+        if (activeCategory !== 'All') params.set('category', activeCategory);
+        try {
+          const response = await fetch(`${API}/captions/?${params}`);
+          if (!response.ok) throw new Error('API request failed');
+          const data = await response.json(); captions = data.results;
+          document.querySelector('#total-count').textContent = bn(data.count);
+          resultCount.textContent = `${bn(data.count)}টি ক্যাপশন`;
+          clearSearch.hidden = !search.value;
+          renderCurrent();
+          const categories = ['All', ...data.categories];
+          filters.innerHTML = categories.map((category) => `<button class="filter-chip ${activeCategory === category ? 'selected' : ''}" data-category="${esc(category)}">${esc(categoryNames[category] || category)}</button>`).join('');
+        } catch (err) {
+          resultCount.textContent = ''; errorBox.hidden = false;
+        }
+      }
+      let debounce;
+      search.addEventListener('input', () => { showingSaved = false; clearTimeout(debounce); debounce = setTimeout(load, 180); });
+      filters.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-category]'); if (!button) return;
+        showingSaved = false; activeCategory = button.dataset.category; load();
+      });
+      document.querySelector('#clear-search').addEventListener('click', () => { search.value = ''; load(); search.focus(); });
+      document.querySelector('#retry').addEventListener('click', load);
+      document.querySelector('#saved-filter').addEventListener('click', (event) => {
+        event.preventDefault(); showingSaved = true; activeCategory = 'All'; search.value = '';
+        load(); document.querySelector('#captions').scrollIntoView({ behavior: 'smooth' });
+      });
+      grid.addEventListener('click', async (event) => {
+        const button = event.target.closest('[data-action]'); if (!button) return;
+        const item = captions.find((caption) => caption.id === Number(button.dataset.id)); if (!item) return;
+        const action = button.dataset.action;
+        if (action === 'copy') {
+          try { await navigator.clipboard.writeText(item.text); notify('ক্যাপশন কপি হয়েছে।'); }
+          catch { notify('এখানে ক্লিপবোর্ড ব্যবহার করা যাচ্ছে না।'); }
+        } else if (action === 'save') {
+          saved.has(item.id) ? saved.delete(item.id) : saved.add(item.id);
+          persist('little-lines-saved', saved); updateSavedCount(); renderCurrent(); notify(saved.has(item.id) ? 'পছন্দের তালিকায় রাখা হয়েছে।' : 'পছন্দের তালিকা থেকে সরানো হয়েছে।');
+        } else if (action === 'like') {
+          if (liked.has(item.id)) { notify('এই ক্যাপশনটি আপনার ভালো লেগেছে।'); return; }
+          liked.add(item.id); persist('little-lines-liked', liked); item.likes += 1; renderCurrent();
+          try { const response = await fetch(`${API}/captions/${item.id}/like/`, { method: 'POST' }); if (!response.ok) throw new Error(); const data = await response.json(); item.likes = data.likes; renderCurrent(); }
+          catch { item.likes -= 1; liked.delete(item.id); persist('little-lines-liked', liked); renderCurrent(); notify('লাইক সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।'); return; }
+          notify('আপনার ভালো লাগা জানানো হয়েছে।');
+        } else if (action === 'share') {
+          const shareData = { title: 'কথার ঘর', text: item.text, url: location.href.split('#')[0] };
+          if (navigator.share) { try { await navigator.share(shareData); } catch {} }
+          else { try { await navigator.clipboard.writeText(`${item.text}\n${shareData.url}`); notify('ক্যাপশন কপি হয়েছে।'); } catch { notify('এখানে শেয়ার করা যাচ্ছে না।'); } }
+        }
+      });
+      document.addEventListener('keydown', (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); search.focus(); } });
+      updateSavedCount(); load();
+    </script>
+  </body>
+</html>

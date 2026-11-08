@@ -1,0 +1,555 @@
+---
+import '../../styles/admin.css';
+const apiBase = (import.meta.env.PUBLIC_API_URL || 'http://localhost:8000/api').replace(/\/$/, '');
+---
+
+<!doctype html>
+<html lang="bn" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f8f5ed" />
+    <title>ক্যাপশন ওয়ার্কস্পেস | কথার ঘর</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-canvas text-ink antialiased">
+    <svg class="screen-reader-only" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="icon-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"/></symbol>
+      <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+      <symbol id="icon-dashboard" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol>
+      <symbol id="icon-files" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v14"/><path d="M18 8H10a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-10a2 2 0 0 0-2-2Z"/><path d="M8 6h10"/></symbol>
+      <symbol id="icon-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></symbol>
+      <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+      <symbol id="icon-filter" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10m-7 6h4"/></symbol>
+      <symbol id="icon-edit" viewBox="0 0 24 24"><path d="m16 4 4 4M4 20l4-.8L19 8a2.1 2.1 0 0 0-3-3L5 16z"/></symbol>
+      <symbol id="icon-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m4 4v6m6-6v6"/></symbol>
+      <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+      <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4m7 14 5-5-5-5m5 5H9"/></symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24"><path d="m18 6-12 12M6 6l12 12"/></symbol>
+      <symbol id="icon-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+      <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4m-4 4v2"/></symbol>
+    </svg>
+
+    <main id="login-screen" class="mx-auto flex min-h-screen max-w-md items-center px-5 py-10">
+      <section class="w-full rounded-xl border border-border bg-surface p-7 shadow-sm sm:p-9" aria-labelledby="login-title">
+        <div class="mb-7 flex items-center gap-3">
+          <span class="grid size-11 place-items-center rounded-lg bg-surface-brand text-brand"><svg class="icon"><use href="#icon-pen" /></svg></span>
+          <div><strong class="block font-display text-lg">কথার ঘর</strong><span class="text-xs font-semibold tracking-widest text-muted">CONTENT STUDIO</span></div>
+        </div>
+        <p class="mb-1 text-xs font-semibold tracking-widest text-muted" data-t="adminAccess">অ্যাডমিন</p>
+        <h1 id="login-title" class="mb-6 font-display text-2xl font-semibold" data-t="loginTitle">ওয়ার্কস্পেসে প্রবেশ</h1>
+        <form id="login-form" class="space-y-4">
+          <label class="block text-sm font-medium"><span data-t="username">সদস্যনাম</span><input id="username" name="username" autocomplete="username" required class="mt-1.5 min-h-11 w-full rounded-md border border-border bg-canvas px-3 text-sm outline-none focus:border-brand" /></label>
+          <label class="block text-sm font-medium"><span data-t="password">পাসওয়ার্ড</span><input id="password" name="password" type="password" autocomplete="current-password" required class="mt-1.5 min-h-11 w-full rounded-md border border-border bg-canvas px-3 text-sm outline-none focus:border-brand" /></label>
+          <p id="login-error" class="hidden rounded-md border border-accent/30 bg-accent/5 px-3 py-2 text-sm text-accent" role="alert"></p>
+          <button id="login-submit" class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-brand px-4 text-sm font-semibold text-white transition-colors hover:bg-brand-strong disabled:opacity-60"><span data-t="signIn">প্রবেশ করুন</span><svg class="icon"><use href="#icon-arrow" /></svg></button>
+        </form>
+        <a href="/" class="mt-5 inline-flex items-center gap-2 text-sm text-muted hover:text-brand"><svg class="icon size-4"><use href="#icon-chevron" /></svg><span data-t="backToSite">সাইটে ফিরুন</span></a>
+      </section>
+    </main>
+
+    <div id="admin-app" class="admin-frame hidden flex min-h-screen">
+      <button id="mobile-backdrop" class="mobile-backdrop fixed inset-0 z-20 hidden bg-ink/30 md:hidden" data-open="false" aria-label="Close navigation"></button>
+      <aside id="admin-sidebar" class="admin-sidebar fixed inset-y-0 left-0 z-30 flex flex-col border-r border-border bg-surface px-3 py-4 md:sticky md:top-0 md:h-screen md:translate-x-0">
+        <a href="/admin/" class="mb-5 flex items-center gap-3 border-b border-border px-2 pb-5 text-ink">
+          <span class="grid size-9 place-items-center rounded-md bg-surface-brand text-brand"><svg class="icon"><use href="#icon-pen" /></svg></span>
+          <span><strong class="block font-display text-base">কথার ঘর</strong><small class="text-[10px] font-semibold tracking-widest text-muted">CONTENT STUDIO</small></span>
+        </a>
+        <p class="mb-2 px-2 text-[10px] font-semibold tracking-widest text-muted" data-t="workspace">কাজের জায়গা</p>
+        <nav class="space-y-1" aria-label="Admin navigation">
+          <button data-view-link="overview" class="nav-link flex min-h-10 w-full items-center gap-3 rounded-md px-3 text-left text-sm text-muted hover:bg-surface-muted"><svg class="icon size-[17px]"><use href="#icon-dashboard" /></svg><span data-t="overview">ওভারভিউ</span></button>
+          <button data-view-link="captions" class="nav-link flex min-h-10 w-full items-center gap-3 rounded-md px-3 text-left text-sm text-muted hover:bg-surface-muted"><svg class="icon size-[17px]"><use href="#icon-files" /></svg><span data-t="captions">ক্যাপশনসমূহ</span><span id="caption-count" class="ml-auto text-xs text-muted"></span></button>
+        </nav>
+        <p id="access-label" class="mb-2 mt-5 px-2 text-[10px] font-semibold tracking-widest text-muted">প্রবেশাধিকার</p>
+        <button id="access-nav" data-view-link="access" class="nav-link flex min-h-10 w-full items-center gap-3 rounded-md px-3 text-left text-sm text-muted hover:bg-surface-muted"><svg class="icon size-[17px]"><use href="#icon-users" /></svg><span id="access-nav-text">সদস্য ও দল</span></button>
+        <button id="sidebar-add" class="mt-5 inline-flex min-h-10 items-center gap-2 rounded-md border border-border px-3 text-sm font-semibold text-brand hover:border-brand hover:bg-surface-brand"><svg class="icon size-4"><use href="#icon-plus" /></svg><span data-t="newCaption">নতুন ক্যাপশন</span></button>
+        <div class="mt-auto border-t border-border pt-4">
+          <div class="flex items-center justify-between gap-2 px-1">
+            <span class="inline-flex items-center gap-2 text-xs text-muted"><span class="size-2 rounded-full bg-brand"></span><span data-t="publishing">ক্যাপশন প্রকাশনা</span></span>
+            <a href="/" target="_blank" rel="noreferrer" class="rounded px-2 py-1 text-xs font-medium text-brand hover:bg-surface-brand" data-t="viewSite">সাইট দেখুন</a>
+          </div>
+        </div>
+      </aside>
+
+      <section class="admin-content min-h-screen flex-1">
+        <header class="sticky top-0 z-10 flex min-h-[62px] items-center gap-3 border-b border-border bg-canvas/95 px-4 backdrop-blur-sm sm:px-6 lg:px-9">
+          <button id="menu-button" class="grid size-10 shrink-0 place-items-center rounded-md border border-border bg-surface text-muted md:hidden" aria-label="Open navigation"><svg class="icon"><use href="#icon-menu" /></svg></button>
+          <div class="hidden text-xs font-semibold tracking-widest text-muted sm:block">CONTENT STUDIO</div>
+          <label class="ml-auto flex h-9 min-w-0 flex-1 items-center gap-2 rounded-md border border-border bg-surface px-2.5 text-muted focus-within:border-brand sm:max-w-sm"><svg class="icon size-4"><use href="#icon-search" /></svg><input id="global-search" type="search" class="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none" placeholder="ক্যাপশন ও পেজ খুঁজুন" data-placeholder="globalSearch" aria-label="Global search" /><kbd class="rounded border border-border bg-surface-muted px-1.5 py-0.5 text-[10px]">Ctrl K</kbd></label>
+          <select id="language-select" class="h-9 rounded-md border border-border bg-surface px-2 text-xs text-ink" aria-label="Language"><option value="bn">বাংলা</option><option value="en">English</option></select>
+          <span id="user-name" class="hidden max-w-24 truncate text-xs text-muted lg:block"></span>
+          <button id="logout-button" class="grid size-9 shrink-0 place-items-center rounded-md text-muted hover:bg-surface-muted hover:text-ink" aria-label="Log out" title="Log out"><svg class="icon size-4"><use href="#icon-logout" /></svg></button>
+        </header>
+
+        <div class="px-3 py-5 sm:px-6 lg:px-9">
+          <section id="overview-view" data-view="overview" class="view-pane">
+            <div class="mb-7 flex flex-wrap items-end justify-between gap-4">
+              <div><p class="mb-1 text-xs font-semibold tracking-widest text-muted" data-t="overview">ওভারভিউ</p><h1 class="font-display text-2xl font-semibold sm:text-3xl" data-t="workspaceTitle">ক্যাপশন ওয়ার্কস্পেস</h1><p class="mt-1 text-sm text-muted" data-t="dashboardHint">খসড়া দেখুন, ক্যাপশন হালনাগাদ রাখুন।</p></div>
+              <button data-new-caption class="primary-action inline-flex min-h-10 items-center gap-2 rounded-md bg-brand px-3.5 text-sm font-semibold text-white hover:bg-brand-strong"><svg class="icon size-4"><use href="#icon-plus" /></svg><span data-t="newCaption">নতুন ক্যাপশন</span></button>
+            </div>
+            <section class="mb-8" aria-labelledby="draft-heading">
+              <div class="mb-3 flex flex-wrap items-center justify-between gap-3"><div><h2 id="draft-heading" class="font-display text-lg font-semibold" data-t="needsAttention">যা দেখার বাকি</h2><p class="text-xs text-muted"><span id="draft-count">0</span> <span data-t="unpublishedCaptions">অপ্রকাশিত ক্যাপশন</span></p></div><button id="view-drafts" class="inline-flex items-center gap-1 text-sm font-semibold text-brand hover:text-brand-strong"><span data-t="viewDrafts">খসড়া দেখুন</span><svg class="icon size-4"><use href="#icon-arrow" /></svg></button></div>
+              <div id="draft-list" class="overflow-hidden rounded-lg border border-border bg-surface"></div>
+            </section>
+            <section aria-labelledby="recent-heading">
+              <div class="mb-3 flex items-end justify-between gap-3"><div><h2 id="recent-heading" class="font-display text-lg font-semibold" data-t="recentCaptions">সাম্প্রতিক ক্যাপশন</h2><p class="text-xs text-muted" data-t="latestChanges">সর্বশেষ সম্পাদনা</p></div><button id="view-all" class="inline-flex items-center gap-1 text-sm font-semibold text-brand"><span data-t="allCaptions">সব ক্যাপশন</span><svg class="icon size-4"><use href="#icon-arrow" /></svg></button></div>
+              <div id="recent-list" class="admin-table-scroll rounded-lg border border-border bg-surface"></div>
+            </section>
+          </section>
+
+          <section id="captions-view" data-view="captions" class="view-pane hidden">
+            <div class="mb-5 flex flex-wrap items-end justify-between gap-4"><div><p class="mb-1 text-xs font-semibold tracking-widest text-muted" data-t="content">কনটেন্ট</p><h1 class="font-display text-2xl font-semibold sm:text-3xl" data-t="allCaptions">সব ক্যাপশন</h1><p class="mt-1 text-sm text-muted" data-t="listHint">ক্যাপশন খুঁজুন, বাছাই করুন ও হালনাগাদ করুন।</p></div><button data-new-caption class="primary-action inline-flex min-h-10 items-center gap-2 rounded-md bg-brand px-3.5 text-sm font-semibold text-white hover:bg-brand-strong"><svg class="icon size-4"><use href="#icon-plus" /></svg><span data-t="newCaption">নতুন ক্যাপশন</span></button></div>
+            <div class="mb-3 flex flex-wrap items-center gap-2 rounded-lg border border-border bg-surface p-2.5">
+              <label class="flex min-h-9 min-w-[220px] flex-1 items-center gap-2 rounded-md border border-border bg-canvas px-2.5 text-muted"><svg class="icon size-4"><use href="#icon-search" /></svg><input id="caption-search" type="search" class="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none" placeholder="ক্যাপশন, বিষয় বা লেখক খুঁজুন" data-placeholder="listSearch" /></label>
+              <select id="category-filter" class="h-9 rounded-md border border-border bg-surface px-2.5 text-sm"><option value="" data-t="allCategories">সব বিষয়</option></select>
+              <select id="status-filter" class="h-9 rounded-md border border-border bg-surface px-2.5 text-sm"><option value="" data-t="allStatuses">সব অবস্থা</option><option value="published" data-t="published">প্রকাশিত</option><option value="draft" data-t="draft">খসড়া</option></select>
+              <select id="featured-filter" class="h-9 rounded-md border border-border bg-surface px-2.5 text-sm"><option value="" data-t="allFeatured">বিশেষ বাছাই: সব</option><option value="yes" data-t="featured">বিশেষ</option><option value="no" data-t="standard">সাধারণ</option></select>
+              <button id="column-button" class="relative inline-flex h-9 items-center gap-2 rounded-md border border-border px-2.5 text-sm text-muted hover:bg-surface-muted"><svg class="icon size-4"><use href="#icon-filter" /></svg><span data-t="columns">কলাম</span></button>
+              <div id="column-menu" class="absolute z-20 mt-40 hidden w-44 rounded-md border border-border bg-surface p-2 shadow-lg"></div>
+            </div>
+            <div id="bulk-bar" class="mb-2 hidden flex-wrap items-center gap-2 rounded-lg border border-border bg-surface-brand px-3 py-2">
+              <span class="mr-auto text-sm font-medium"><span id="selected-count">0</span> <span data-t="selected">নির্বাচিত</span></span>
+              <select id="bulk-action" class="h-9 rounded-md border border-border bg-surface px-2 text-sm"><option value="" data-t="bulkChoose">নির্বাচিতদের জন্য কাজ</option><option value="publish" data-t="publish">প্রকাশ করুন</option><option value="draft" data-t="makeDraft">খসড়া করুন</option><option value="feature" data-t="feature">বিশেষ করুন</option><option value="unfeature" data-t="unfeature">বিশেষ থেকে সরান</option><option value="delete" data-t="delete">মুছে ফেলুন</option></select>
+              <button id="run-bulk" class="h-9 rounded-md bg-brand px-3 text-sm font-semibold text-white hover:bg-brand-strong" data-t="apply">প্রয়োগ</button>
+            </div>
+            <div id="caption-table" class="admin-table-scroll rounded-lg border border-border bg-surface"></div>
+            <div class="mt-3 flex items-center justify-between gap-3 rounded-lg border border-border bg-surface px-3 py-2 text-xs text-muted"><span id="list-summary">—</span><div class="flex items-center gap-2"><button id="previous-page" class="grid size-8 place-items-center rounded border border-border hover:bg-surface-muted" aria-label="Previous page"><svg class="icon size-4 rotate-180"><use href="#icon-arrow" /></svg></button><span id="page-label">1 / 1</span><button id="next-page" class="grid size-8 place-items-center rounded border border-border hover:bg-surface-muted" aria-label="Next page"><svg class="icon size-4"><use href="#icon-arrow" /></svg></button></div></div>
+          </section>
+          <section id="access-view" data-view="access" class="view-pane hidden">
+            <div class="mb-5 flex flex-wrap items-end justify-between gap-4"><div><p class="mb-1 text-xs font-semibold tracking-widest text-muted" id="access-eyebrow">ACCESS</p><h1 class="font-display text-2xl font-semibold sm:text-3xl" id="access-title">সদস্য ও দল</h1><p class="mt-1 text-sm text-muted" id="access-hint">ব্যবহারকারীর অ্যাকাউন্ট ও দলের প্রবেশাধিকার দেখুন।</p></div></div>
+            <div class="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-border bg-surface p-2.5"><div class="flex gap-1 rounded-md bg-surface-muted p-1"><button id="users-tab" class="rounded px-3 py-1.5 text-sm font-medium" data-access-tab="users">সদস্য</button><button id="groups-tab" class="rounded px-3 py-1.5 text-sm font-medium" data-access-tab="groups">দল</button></div><label class="ml-auto flex min-h-9 min-w-[180px] flex-1 items-center gap-2 rounded-md border border-border bg-canvas px-2.5 text-muted sm:max-w-sm"><svg class="icon size-4"><use href="#icon-search" /></svg><input id="access-search" type="search" class="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none" placeholder="সদস্য বা দল খুঁজুন" /><span id="access-count" class="whitespace-nowrap text-xs text-muted"></span></label><button id="create-user-button" class="hidden min-h-9 shrink-0 items-center gap-2 rounded-md bg-brand px-3 text-sm font-semibold text-white hover:bg-brand-strong"><svg class="icon size-4"><use href="#icon-plus" /></svg><span id="create-user-label">নতুন সদস্য</span></button><button id="create-group-button" class="hidden min-h-9 shrink-0 items-center gap-2 rounded-md bg-brand px-3 text-sm font-semibold text-white hover:bg-brand-strong"><svg class="icon size-4"><use href="#icon-plus" /></svg><span id="create-group-label">নতুন দল</span></button></div>
+            <div id="access-list" class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3"></div>
+          </section>
+        </div>
+      </section>
+    </div>
+
+    <dialog id="caption-dialog" class="confirm-dialog p-0">
+      <form id="caption-form" class="p-5 sm:p-6">
+        <div class="mb-5 flex items-start justify-between gap-3"><div><p class="mb-1 text-xs font-semibold tracking-widest text-muted" data-t="captionEditor">ক্যাপশন এডিটর</p><h2 id="dialog-title" class="font-display text-xl font-semibold" data-t="newCaption">নতুন ক্যাপশন</h2></div><button type="button" data-close-dialog class="grid size-9 place-items-center rounded-md text-muted hover:bg-surface-muted" aria-label="Close"><svg class="icon size-4"><use href="#icon-close" /></svg></button></div>
+        <input id="caption-id" type="hidden" />
+        <div class="space-y-4">
+          <label class="block text-sm font-medium"><span data-t="captionText">ক্যাপশন</span><textarea id="caption-text" required maxlength="500" rows="5" class="mt-1.5 w-full resize-y rounded-md border border-border bg-canvas px-3 py-2 text-sm leading-6 outline-none focus:border-brand"></textarea><span class="mt-1 block text-xs text-muted"><span id="char-count">0</span>/500</span><span class="field-error hidden text-xs text-accent" data-error="text"></span></label>
+          <div class="grid gap-4 sm:grid-cols-2"><label class="block text-sm font-medium"><span data-t="category">বিষয়</span><input id="caption-category" list="category-options" required maxlength="40" class="mt-1.5 h-10 w-full rounded-md border border-border bg-canvas px-3 text-sm outline-none focus:border-brand" /><datalist id="category-options"></datalist><span class="field-error hidden text-xs text-accent" data-error="category"></span></label><label class="block text-sm font-medium"><span data-t="author">লেখকের নাম</span><input id="caption-author" maxlength="80" class="mt-1.5 h-10 w-full rounded-md border border-border bg-canvas px-3 text-sm outline-none focus:border-brand" /><span class="field-error hidden text-xs text-accent" data-error="author"></span></label></div>
+          <div class="flex flex-wrap gap-x-6 gap-y-3 rounded-md border border-border bg-canvas p-3"><label class="flex items-center gap-2 text-sm"><input id="caption-published" type="checkbox" class="size-4 accent-brand" checked /><span data-t="published">প্রকাশিত</span></label><label class="flex items-center gap-2 text-sm"><input id="caption-featured" type="checkbox" class="size-4 accent-brand" /><span data-t="featured">বিশেষ</span></label></div>
+          <p id="form-error" class="hidden rounded-md border border-accent/30 bg-accent/5 px-3 py-2 text-sm text-accent" role="alert"></p>
+        </div>
+        <div class="sticky bottom-0 -mx-5 mt-6 flex flex-wrap justify-end gap-2 border-t border-border bg-surface px-5 pt-4 sm:-mx-6 sm:px-6"><button type="button" data-close-dialog class="min-h-10 rounded-md border border-border px-3 text-sm font-medium hover:bg-surface-muted" data-t="cancel">বাতিল</button><button id="save-caption" class="min-h-10 rounded-md bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-strong" data-t="save">সংরক্ষণ করুন</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="delete-dialog" class="confirm-dialog p-5 sm:p-6">
+      <p class="mb-1 text-xs font-semibold tracking-widest text-accent" data-t="deleteCaption">ক্যাপশন মুছুন</p><h2 class="font-display text-xl font-semibold" data-t="confirmDelete">মুছে ফেলা নিশ্চিত করুন</h2><p id="delete-description" class="mt-2 break-words text-sm text-muted"></p><div class="mt-6 flex justify-end gap-2"><button id="cancel-delete" class="min-h-10 rounded-md border border-border px-3 text-sm" data-t="cancel">বাতিল</button><button id="confirm-delete" class="min-h-10 rounded-md bg-accent px-3 text-sm font-semibold text-white" data-t="delete">মুছে ফেলুন</button></div>
+    </dialog>
+    <dialog id="group-dialog" class="confirm-dialog p-0">
+      <form id="group-form" class="p-5 sm:p-6">
+        <div class="mb-5 flex items-start justify-between gap-3"><div><p class="mb-1 text-xs font-semibold tracking-widest text-muted" id="group-eyebrow">প্রবেশাধিকার</p><h2 class="font-display text-xl font-semibold" id="group-dialog-title">নতুন দল</h2></div><button type="button" id="close-group-dialog" class="grid size-9 place-items-center rounded-md text-muted hover:bg-surface-muted" aria-label="বন্ধ করুন"><svg class="icon size-4"><use href="#icon-close" /></svg></button></div>
+        <label class="block text-sm font-medium"><span id="group-name-label">দলের নাম</span><input id="group-name" name="name" required maxlength="150" autocomplete="off" class="mt-1.5 h-10 w-full rounded-md border border-border bg-canvas px-3 text-sm outline-none focus:border-brand" /><span id="group-name-error" class="mt-1 hidden text-xs text-accent"></span></label>
+        <p id="group-form-error" class="mt-3 hidden rounded-md border border-accent/30 bg-accent/5 px-3 py-2 text-sm text-accent" role="alert"></p>
+        <p class="mt-3 text-xs leading-5 text-muted" id="group-help">দল তৈরি হলে Django admin থেকে সদস্য ও অনুমতি যুক্ত করুন।</p>
+        <div class="sticky bottom-0 -mx-5 mt-6 flex flex-wrap justify-end gap-2 border-t border-border bg-surface px-5 pt-4 sm:-mx-6 sm:px-6"><button type="button" id="cancel-group" class="min-h-10 rounded-md border border-border px-3 text-sm font-medium hover:bg-surface-muted">বাতিল</button><button id="save-group" class="min-h-10 rounded-md bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-strong">দল তৈরি করুন</button></div>
+      </form>
+    </dialog>
+    <dialog id="user-dialog" class="confirm-dialog p-0">
+      <form id="user-form" class="p-5 sm:p-6">
+        <div class="mb-5 flex items-start justify-between gap-3"><div><p class="mb-1 text-xs font-semibold tracking-widest text-muted" id="user-form-eyebrow">সদস্য</p><h2 class="font-display text-xl font-semibold" id="user-dialog-title">নতুন সদস্য</h2></div><button type="button" id="close-user-dialog" class="grid size-9 place-items-center rounded-md text-muted hover:bg-surface-muted" aria-label="বন্ধ করুন"><svg class="icon size-4"><use href="#icon-close" /></svg></button></div>
+        <div class="space-y-4">
+          <label class="block text-sm font-medium"><span id="new-username-label">সদস্যনাম</span><input id="new-username" required maxlength="150" autocomplete="username" class="mt-1.5 h-10 w-full rounded-md border border-border bg-canvas px-3 text-sm outline-none focus:border-brand" /><span id="username-error" class="mt-1 hidden text-xs text-accent"></span></label>
+          <label class="block text-sm font-medium"><span id="new-email-label">ইমেইল (ঐচ্ছিক)</span><input id="new-email" type="email" maxlength="254" autocomplete="email" class="mt-1.5 h-10 w-full rounded-md border border-border bg-canvas px-3 text-sm outline-none focus:border-brand" /><span id="email-error" class="mt-1 hidden text-xs text-accent"></span></label>
+          <label class="block text-sm font-medium"><span id="new-password-label">প্রাথমিক পাসওয়ার্ড</span><input id="new-user-password" type="password" required minlength="10" autocomplete="new-password" class="mt-1.5 h-10 w-full rounded-md border border-border bg-canvas px-3 text-sm outline-none focus:border-brand" /><span id="new-password-error" class="mt-1 hidden text-xs text-accent"></span></label>
+          <label class="block text-sm font-medium"><span id="user-role-label">অ্যাকাউন্টের ধরন</span><select id="new-user-role" class="mt-1.5 h-10 w-full rounded-md border border-border bg-canvas px-3 text-sm outline-none focus:border-brand"><option value="staff">স্টাফ</option><option id="admin-role-option" value="admin">অ্যাডমিন · সব অনুমতি</option></select></label>
+          <p id="user-role-help" class="rounded-md bg-surface-muted px-3 py-2 text-xs leading-5 text-muted">স্টাফ ক্যাপশন লিখতে ও সম্পাদনা করতে পারবেন। অ্যাডমিনের সব অনুমতি থাকবে।</p>
+          <p id="user-form-error" class="hidden rounded-md border border-accent/30 bg-accent/5 px-3 py-2 text-sm text-accent" role="alert"></p>
+        </div>
+        <div class="sticky bottom-0 -mx-5 mt-6 flex flex-wrap justify-end gap-2 border-t border-border bg-surface px-5 pt-4 sm:-mx-6 sm:px-6"><button type="button" id="cancel-user" class="min-h-10 rounded-md border border-border px-3 text-sm font-medium hover:bg-surface-muted">বাতিল</button><button id="save-user" class="min-h-10 rounded-md bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-strong">অ্যাকাউন্ট তৈরি করুন</button></div>
+      </form>
+    </dialog>
+    <dialog id="password-dialog" class="confirm-dialog p-0">
+      <form id="password-form" class="p-5 sm:p-6">
+        <div class="mb-5 flex items-start justify-between gap-3"><div><p class="mb-1 text-xs font-semibold tracking-widest text-muted" id="password-eyebrow">নিরাপত্তা</p><h2 class="font-display text-xl font-semibold" id="password-dialog-title">পাসওয়ার্ড বদল</h2><p id="password-user-label" class="mt-1 text-sm text-muted"></p></div><button type="button" id="close-password-dialog" class="grid size-9 place-items-center rounded-md text-muted hover:bg-surface-muted" aria-label="বন্ধ করুন"><svg class="icon size-4"><use href="#icon-close" /></svg></button></div>
+        <div class="space-y-4"><label class="block text-sm font-medium"><span id="password-new-label">নতুন পাসওয়ার্ড</span><input id="changed-password" type="password" required minlength="10" autocomplete="new-password" class="mt-1.5 h-10 w-full rounded-md border border-border bg-canvas px-3 text-sm outline-none focus:border-brand" /><span id="changed-password-error" class="mt-1 hidden text-xs text-accent"></span></label><label class="block text-sm font-medium"><span id="password-repeat-label">আবার লিখুন</span><input id="changed-password-confirm" type="password" required minlength="10" autocomplete="new-password" class="mt-1.5 h-10 w-full rounded-md border border-border bg-canvas px-3 text-sm outline-none focus:border-brand" /></label><p id="password-form-error" class="hidden rounded-md border border-accent/30 bg-accent/5 px-3 py-2 text-sm text-accent" role="alert"></p></div>
+        <div class="sticky bottom-0 -mx-5 mt-6 flex flex-wrap justify-end gap-2 border-t border-border bg-surface px-5 pt-4 sm:-mx-6 sm:px-6"><button type="button" id="cancel-password" class="min-h-10 rounded-md border border-border px-3 text-sm font-medium hover:bg-surface-muted">বাতিল</button><button id="save-password" class="min-h-10 rounded-md bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-strong">পাসওয়ার্ড সংরক্ষণ</button></div>
+      </form>
+    </dialog>
+    <dialog id="command-dialog" class="command-dialog">
+      <div class="flex items-center gap-3 border-b border-border p-3"><svg class="icon text-muted"><use href="#icon-search" /></svg><input id="command-search" class="min-w-0 flex-1 bg-transparent text-sm outline-none" placeholder="ক্যাপশন খুঁজুন বা পেজে যান" data-placeholder="commandSearch" /><button id="close-command" class="grid size-8 place-items-center rounded text-muted hover:bg-surface-muted" aria-label="Close"><svg class="icon size-4"><use href="#icon-close" /></svg></button></div>
+      <div class="p-2"><button data-command="overview" class="flex min-h-11 w-full items-center gap-3 rounded-md px-3 text-left text-sm hover:bg-surface-brand"><svg class="icon size-4 text-brand"><use href="#icon-dashboard" /></svg><span data-t="overview">ওভারভিউ</span><kbd class="ml-auto rounded border border-border px-1.5 py-0.5 text-[10px]">G O</kbd></button><button data-command="captions" class="flex min-h-11 w-full items-center gap-3 rounded-md px-3 text-left text-sm hover:bg-surface-brand"><svg class="icon size-4 text-brand"><use href="#icon-files" /></svg><span data-t="allCaptions">সব ক্যাপশন</span><kbd class="ml-auto rounded border border-border px-1.5 py-0.5 text-[10px]">G C</kbd></button><button data-command="new" class="flex min-h-11 w-full items-center gap-3 rounded-md px-3 text-left text-sm hover:bg-surface-brand"><svg class="icon size-4 text-brand"><use href="#icon-plus" /></svg><span data-t="newCaption">নতুন ক্যাপশন</span><kbd class="ml-auto rounded border border-border px-1.5 py-0.5 text-[10px]">N</kbd></button></div>
+    </dialog>
+    <div id="toast" class="toast pointer-events-none fixed bottom-4 right-4 z-50 hidden max-w-sm rounded-lg border border-border bg-surface px-4 py-3 text-sm shadow-lg" role="status" aria-live="polite"></div>
+
+    <script define:vars={{ apiBase }}>
+      const API = apiBase;
+      const uiText = {
+        bn: { adminAccess:'অ্যাডমিন',loginTitle:'ওয়ার্কস্পেসে প্রবেশ',username:'সদস্যনাম',password:'পাসওয়ার্ড',signIn:'প্রবেশ করুন',backToSite:'সাইটে ফিরুন',workspace:'কাজের জায়গা',overview:'ওভারভিউ',captions:'ক্যাপশনসমূহ',newCaption:'নতুন ক্যাপশন',publishing:'ক্যাপশন প্রকাশনা',viewSite:'সাইট দেখুন',workspaceTitle:'ক্যাপশন ওয়ার্কস্পেস',dashboardHint:'খসড়া দেখুন, ক্যাপশন হালনাগাদ রাখুন।',needsAttention:'যা দেখার বাকি',unpublishedCaptions:'অপ্রকাশিত ক্যাপশন',viewDrafts:'খসড়া দেখুন',recentCaptions:'সাম্প্রতিক ক্যাপশন',latestChanges:'সর্বশেষ সম্পাদনা',allCaptions:'সব ক্যাপশন',content:'কনটেন্ট',listHint:'ক্যাপশন খুঁজুন, বাছাই করুন ও হালনাগাদ করুন।',allCategories:'সব বিষয়',allStatuses:'সব অবস্থা',published:'প্রকাশিত',draft:'খসড়া',allFeatured:'বিশেষ বাছাই: সব',featured:'বিশেষ',standard:'সাধারণ',columns:'কলাম',selected:'নির্বাচিত',bulkChoose:'নির্বাচিতদের জন্য কাজ',publish:'প্রকাশ করুন',makeDraft:'খসড়া করুন',feature:'বিশেষ করুন',unfeature:'বিশেষ থেকে সরান',delete:'মুছে ফেলুন',apply:'প্রয়োগ',captionEditor:'ক্যাপশন এডিটর',captionText:'ক্যাপশন',category:'বিষয়',author:'লেখকের নাম',cancel:'বাতিল',save:'সংরক্ষণ করুন',deleteCaption:'ক্যাপশন মুছুন',confirmDelete:'মুছে ফেলা নিশ্চিত করুন',globalSearch:'ক্যাপশন ও পেজ খুঁজুন',listSearch:'ক্যাপশন, বিষয় বা লেখক খুঁজুন',commandSearch:'ক্যাপশন খুঁজুন বা পেজে যান',allCaughtUp:'সব ঠিক আছে',noDrafts:'অপ্রকাশিত ক্যাপশন নেই।',noCaptions:'এখনো কোনো ক্যাপশন নেই',firstCaption:'সাইটে দেখাতে প্রথম ক্যাপশন যোগ করুন।',updated:'সম্পাদিত',likes:'লাইক',status:'অবস্থা',featuredColumn:'বিশেষ বাছাই',created:'তৈরির সময়',search:'খুঁজুন',pageOf:'পৃষ্ঠা',noResults:'এই খোঁজে কোনো ক্যাপশন মেলেনি।',saveOk:'ক্যাপশন সংরক্ষণ হয়েছে।',deleteOk:'ক্যাপশন মুছে ফেলা হয়েছে।',bulkOk:'নির্বাচিত ক্যাপশন হালনাগাদ হয়েছে।',loadError:'ক্যাপশন লোড করা যায়নি। আবার চেষ্টা করুন।' },
+        en: { adminAccess:'ADMIN',loginTitle:'Sign in to your workspace',username:'Username',password:'Password',signIn:'Sign in',backToSite:'Back to site',workspace:'WORKSPACE',overview:'Overview',captions:'Captions',newCaption:'New caption',publishing:'Caption publishing',viewSite:'View site',workspaceTitle:'Caption workspace',dashboardHint:'Review drafts and keep captions up to date.',needsAttention:'Needs attention',unpublishedCaptions:'unpublished captions',viewDrafts:'View drafts',recentCaptions:'Recently updated',latestChanges:'Latest caption changes',allCaptions:'All captions',content:'CONTENT',listHint:'Search, filter, and update captions shown on your site.',allCategories:'All categories',allStatuses:'All statuses',published:'Published',draft:'Draft',allFeatured:'Featured: all',featured:'Featured',standard:'Standard',columns:'Columns',selected:'selected',bulkChoose:'Choose an action',publish:'Publish',makeDraft:'Move to drafts',feature:'Feature',unfeature:'Remove featured',delete:'Delete',apply:'Apply',captionEditor:'CAPTION EDITOR',captionText:'Caption',category:'Category',author:'Author name',cancel:'Cancel',save:'Save caption',deleteCaption:'DELETE CAPTION',confirmDelete:'Confirm deletion',globalSearch:'Search captions and pages',listSearch:'Search captions, categories, or authors',commandSearch:'Search captions or go to a page',allCaughtUp:'All caught up',noDrafts:'There are no unpublished captions.',noCaptions:'No captions yet',firstCaption:'Add a caption to publish it on your site.',updated:'Updated',likes:'Likes',status:'Status',featuredColumn:'Featured',created:'Created',search:'Search',pageOf:'Page',noResults:'No captions match this search.',saveOk:'Caption saved.',deleteOk:'Caption deleted.',bulkOk:'Selected captions updated.',loadError:'Could not load captions. Try again.' }
+      };
+      let language = localStorage.getItem('caption-admin-language') || 'bn';
+      let csrfToken = '';
+      let permissions = { add: false, change: false, delete: false };
+      let activeView = 'overview';
+      let activeAccessTab = 'users';
+      let accessData = { users: [], groups: [], can_view_users: false, can_view_groups: false };
+      let captions = [];
+      let categories = [];
+      let currentPage = 1;
+      let totalPages = 1;
+      let ordering = '-created_at';
+      let pendingDelete = null;
+      let searchTimer;
+      let keyboardPrefix = '';
+      let toastTimer;
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => [...document.querySelectorAll(selector)];
+      const text = (key) => uiText[language][key] || key;
+      const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[char]);
+      const icon = (name, cls = 'icon size-4') => `<svg class="${cls}" aria-hidden="true"><use href="#icon-${name}"></use></svg>`;
+      async function request(path, options = {}) {
+        const headers = new Headers(options.headers || {});
+        if (options.body) headers.set('Content-Type', 'application/json');
+        if (csrfToken && options.method && !['GET','HEAD','OPTIONS'].includes(options.method)) headers.set('X-CSRFToken', csrfToken);
+        const response = await fetch(`${API}${path}`, { credentials:'include', ...options, headers });
+        let payload = {};
+        try { payload = await response.json(); } catch {}
+        if (!response.ok) {
+          const error = new Error(payload.error || Object.values(payload.errors || {})[0] || `Request failed (${response.status})`);
+          error.status = response.status; error.payload = payload; throw error;
+        }
+        return payload;
+      }
+      function notify(message, tone = 'success') {
+        const toast = $('#toast'); toast.textContent = message; toast.dataset.tone = tone; toast.classList.remove('hidden');
+        clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.add('hidden'), 3200);
+      }
+      function setLanguage(value) {
+        language = value === 'en' ? 'en' : 'bn'; localStorage.setItem('caption-admin-language', language);
+        document.documentElement.lang = language; $('#language-select').value = language;
+        $$('[data-t]').forEach((node) => { const key = node.dataset.t; if (uiText[language][key]) node.textContent = text(key); });
+        $$('[data-placeholder]').forEach((node) => { node.placeholder = text(node.dataset.placeholder); });
+        $('#caption-search').placeholder = text('listSearch');
+        document.title = `${text('workspaceTitle')} | কথার ঘর`;
+        if (!$('#admin-app').classList.contains('hidden')) { if (activeView === 'access') renderAccess(); else if (activeView === 'captions') loadCaptions(); else renderDashboard(); }
+      }
+      function showLogin() { $('#admin-app').classList.add('hidden'); $('#login-screen').classList.remove('hidden'); }
+      function showApp() { $('#login-screen').classList.add('hidden'); $('#admin-app').classList.remove('hidden'); $('#user-name').textContent = $('#user-name').dataset.username || ''; }
+      function setView(view) {
+        if (view === 'access' && !permissions.view_users && !permissions.view_groups) view = 'overview';
+        activeView = view;
+        $$('[data-view]').forEach((section) => section.classList.toggle('hidden', section.dataset.view !== view));
+        $$('[data-view-link]').forEach((button) => {
+          const active = button.dataset.viewLink === view;
+          button.classList.toggle('bg-surface-brand', active); button.classList.toggle('font-semibold', active); button.classList.toggle('text-brand', active);
+          button.classList.toggle('text-muted', !active);
+        });
+        history.replaceState(null, '', view === 'captions' || view === 'access' ? `/admin/?view=${view}` : '/admin/');
+        if (view === 'captions') loadCaptions(); else if (view === 'access') loadAccess(); else renderDashboard();
+        closeSidebar();
+      }
+      function renderAccess() {
+        const canUsers = accessData.can_view_users;
+        const canGroups = accessData.can_view_groups;
+        if (!canUsers && !canGroups) {
+          $('#access-list').innerHTML = `<div class="rounded-lg border border-border bg-surface p-5 text-sm text-muted">${language === 'bn' ? 'সদস্য বা দলের তথ্য দেখার অনুমতি নেই।' : 'You do not have permission to view users or groups.'}</div>`;
+          return;
+        }
+        if ((activeAccessTab === 'users' && !canUsers) || (activeAccessTab === 'groups' && !canGroups)) activeAccessTab = canUsers ? 'users' : 'groups';
+        const usersTab = $('#users-tab'); const groupsTab = $('#groups-tab');
+        const addGroup = $('#create-group-button');
+        const addUser = $('#create-user-button');
+        addGroup.classList.toggle('hidden', activeAccessTab !== 'groups' || !accessData.can_add_groups);
+        addGroup.classList.toggle('inline-flex', activeAccessTab === 'groups' && accessData.can_add_groups);
+        addUser.classList.toggle('hidden', activeAccessTab !== 'users' || !accessData.can_add_users);
+        addUser.classList.toggle('inline-flex', activeAccessTab === 'users' && accessData.can_add_users);
+        $('#admin-role-option').classList.toggle('hidden', !accessData.can_create_admin);
+        if (!accessData.can_create_admin && $('#new-user-role').value === 'admin') $('#new-user-role').value = 'staff';
+        usersTab.classList.toggle('hidden', !canUsers); groupsTab.classList.toggle('hidden', !canGroups);
+        [usersTab, groupsTab].forEach((tab) => {
+          const active = tab.dataset.accessTab === activeAccessTab;
+          tab.classList.toggle('bg-surface', active); tab.classList.toggle('text-brand', active); tab.classList.toggle('shadow-sm', active); tab.setAttribute('aria-pressed', String(active));
+        });
+        const query = $('#access-search').value.trim().toLocaleLowerCase();
+        const list = activeAccessTab === 'users' ? accessData.users : accessData.groups;
+        const filtered = list.filter((entry) => JSON.stringify(entry).toLocaleLowerCase().includes(query));
+        const noun = activeAccessTab === 'users' ? (language === 'bn' ? 'সদস্য' : 'members') : (language === 'bn' ? 'দল' : 'groups');
+        $('#access-count').textContent = `${new Intl.NumberFormat(language === 'bn' ? 'bn-BD' : 'en-US').format(filtered.length)} ${noun}`;
+        $('#access-eyebrow').textContent = language === 'bn' ? 'প্রবেশাধিকার' : 'ACCESS';
+        $('#access-title').textContent = language === 'bn' ? 'সদস্য ও দল' : 'Users and groups';
+        $('#access-hint').textContent = language === 'bn' ? 'ব্যবহারকারীর অ্যাকাউন্ট ও দলের প্রবেশাধিকার দেখুন।' : 'Review user accounts and group permissions.';
+        usersTab.textContent = language === 'bn' ? 'সদস্য' : 'Users';
+        groupsTab.textContent = language === 'bn' ? 'দল' : 'Groups';
+        $('#access-search').placeholder = language === 'bn' ? 'সদস্য বা দল খুঁজুন' : 'Search users or groups';
+        $('#create-group-label').textContent = language === 'bn' ? 'নতুন দল' : 'New group';
+        $('#create-user-label').textContent = language === 'bn' ? 'নতুন সদস্য' : 'New user';
+        $('#group-eyebrow').textContent = language === 'bn' ? 'প্রবেশাধিকার' : 'ACCESS';
+        $('#group-dialog-title').textContent = language === 'bn' ? 'নতুন দল' : 'New group';
+        $('#group-name-label').textContent = language === 'bn' ? 'দলের নাম' : 'Group name';
+        $('#group-help').textContent = language === 'bn' ? 'দল তৈরি হলে Django admin থেকে সদস্য ও অনুমতি যুক্ত করুন।' : 'After creating the group, add members and permissions in Django admin.';
+        $('#save-group').textContent = language === 'bn' ? 'দল তৈরি করুন' : 'Create group';
+        $('#cancel-group').textContent = language === 'bn' ? 'বাতিল' : 'Cancel';
+        $('#user-form-eyebrow').textContent = language === 'bn' ? 'সদস্য' : 'USERS';
+        $('#user-dialog-title').textContent = language === 'bn' ? 'নতুন সদস্য' : 'New user';
+        $('#new-username-label').textContent = language === 'bn' ? 'সদস্যনাম' : 'Username';
+        $('#new-email-label').textContent = language === 'bn' ? 'ইমেইল (ঐচ্ছিক)' : 'Email (optional)';
+        $('#new-password-label').textContent = language === 'bn' ? 'প্রাথমিক পাসওয়ার্ড' : 'Initial password';
+        $('#user-role-label').textContent = language === 'bn' ? 'অ্যাকাউন্টের ধরন' : 'Account type';
+        $('#new-user-role').querySelector('option[value="staff"]').textContent = language === 'bn' ? 'স্টাফ' : 'Staff';
+        $('#admin-role-option').textContent = language === 'bn' ? 'অ্যাডমিন · সব অনুমতি' : 'Admin · full access';
+        $('#user-role-help').textContent = language === 'bn' ? 'স্টাফ ক্যাপশন লিখতে ও সম্পাদনা করতে পারবেন। অ্যাডমিনের সব অনুমতি থাকবে।' : 'Staff can create and edit captions. Admins have full access.';
+        $('#save-user').textContent = language === 'bn' ? 'অ্যাকাউন্ট তৈরি করুন' : 'Create account';
+        $('#cancel-user').textContent = language === 'bn' ? 'বাতিল' : 'Cancel';
+        $('#password-eyebrow').textContent = language === 'bn' ? 'নিরাপত্তা' : 'SECURITY';
+        $('#password-dialog-title').textContent = language === 'bn' ? 'পাসওয়ার্ড বদল' : 'Change password';
+        $('#password-new-label').textContent = language === 'bn' ? 'নতুন পাসওয়ার্ড' : 'New password';
+        $('#password-repeat-label').textContent = language === 'bn' ? 'আবার লিখুন' : 'Confirm password';
+        $('#save-password').textContent = language === 'bn' ? 'পাসওয়ার্ড সংরক্ষণ' : 'Save password';
+        $('#cancel-password').textContent = language === 'bn' ? 'বাতিল' : 'Cancel';
+        if (!filtered.length) {
+          const isEmpty = list.length === 0;
+          const heading = isEmpty
+            ? activeAccessTab === 'groups' ? (language === 'bn' ? 'এখনো কোনো দল তৈরি হয়নি' : 'No groups have been created') : (language === 'bn' ? 'কোনো সদস্য পাওয়া যায়নি' : 'No users found')
+            : (language === 'bn' ? 'কোনো তথ্য পাওয়া যায়নি' : 'No results found');
+          const detail = isEmpty
+            ? activeAccessTab === 'groups' ? (language === 'bn' ? 'উপরে “নতুন দল” বেছে একটি দল তৈরি করুন। সদস্য ও অনুমতি Django admin থেকে যুক্ত করা যাবে।' : 'Use “New group” above to create a group. Members and permissions can be assigned in Django admin.') : (language === 'bn' ? 'এই সাইটে এখনো কোনো সদস্য অ্যাকাউন্ট নেই।' : 'There are no user accounts yet.')
+            : (language === 'bn' ? 'অন্য নামে খুঁজে দেখুন।' : 'Try a different search.');
+          $('#access-list').innerHTML = `<div class="col-span-full rounded-lg border border-border bg-surface px-5 py-10 text-center"><p class="font-medium">${heading}</p><p class="mx-auto mt-1 max-w-lg text-sm text-muted">${detail}</p></div>`;
+          return;
+        }
+        $('#access-list').innerHTML = filtered.map((entry) => {
+          if (activeAccessTab === 'users') {
+            const name = entry.name || entry.username;
+            const status = entry.is_active ? (language === 'bn' ? 'সক্রিয়' : 'Active') : (language === 'bn' ? 'নিষ্ক্রিয়' : 'Inactive');
+            const roles = [entry.is_superuser ? (language === 'bn' ? 'সুপার অ্যাডমিন' : 'Superuser') : '', entry.is_staff ? (language === 'bn' ? 'স্টাফ' : 'Staff') : '', ...(entry.groups || [])].filter(Boolean);
+            const canChangePassword = accessData.can_change_users && (accessData.can_create_admin || (!entry.is_staff && !entry.is_superuser));
+            return `<article class="min-w-0 rounded-lg border border-border bg-surface p-4"><div class="flex min-w-0 items-start justify-between gap-3"><div class="min-w-0"><h2 class="truncate font-semibold">${esc(name)}</h2><p class="mt-0.5 truncate text-sm text-muted">@${esc(entry.username)}</p></div><span class="admin-state ${entry.is_active ? 'admin-state-live' : 'admin-state-draft'}">${status}</span></div><p class="mt-3 truncate text-sm text-muted">${esc(entry.email || (language === 'bn' ? 'ইমেইল দেওয়া নেই' : 'No email address'))}</p><div class="mt-3 flex flex-wrap gap-1.5">${roles.length ? roles.map((role) => `<span class="rounded-full bg-surface-muted px-2 py-1 text-xs text-muted">${esc(role)}</span>`).join('') : `<span class="text-xs text-muted">${language === 'bn' ? 'কোনো দল নেই' : 'No groups'}</span>`}</div>${canChangePassword ? `<div class="mt-4 border-t border-border pt-3"><button data-password-user="${entry.id}" class="inline-flex min-h-9 items-center gap-2 rounded-md px-2 text-sm font-medium text-brand hover:bg-surface-brand">${icon('lock')}<span>${language === 'bn' ? 'পাসওয়ার্ড বদল' : 'Change password'}</span></button></div>` : ''}</article>`;
+          }
+          return `<article class="min-w-0 rounded-lg border border-border bg-surface p-4"><div class="flex items-start gap-3"><span class="grid size-9 shrink-0 place-items-center rounded-md bg-surface-brand text-brand">${icon('users')}</span><div class="min-w-0"><h2 class="break-words font-semibold">${esc(entry.name)}</h2><p class="mt-1 text-sm text-muted">${new Intl.NumberFormat(language === 'bn' ? 'bn-BD' : 'en-US').format(entry.member_count)} ${language === 'bn' ? 'জন সদস্য' : 'members'}</p></div></div><div class="mt-4 border-t border-border pt-3 text-xs text-muted">${language === 'bn' ? 'অনুমতি' : 'Permissions'} · ${new Intl.NumberFormat(language === 'bn' ? 'bn-BD' : 'en-US').format(entry.permission_count)}</div></article>`;
+        }).join('');
+      }
+      async function loadAccess() {
+        $('#access-list').innerHTML = `<div class="skeleton h-28 rounded-lg"></div><div class="skeleton h-28 rounded-lg"></div>`;
+        try { accessData = await request(`/admin/access/?q=${encodeURIComponent($('#access-search').value.trim())}`); renderAccess(); }
+        catch (error) { $('#access-list').innerHTML = `<div role="alert" class="col-span-full rounded-lg border border-border bg-surface p-5 text-sm text-accent">${esc(error.message || text('loadError'))}</div>`; }
+      }
+      function openGroupDialog() {
+        $('#group-form').reset(); $('#group-name-error').classList.add('hidden'); $('#group-form-error').classList.add('hidden');
+        $('#group-dialog').showModal(); $('#group-name').focus();
+      }
+      async function saveGroup(event) {
+        event.preventDefault();
+        const name = $('#group-name').value.trim();
+        $('#group-name-error').classList.add('hidden'); $('#group-form-error').classList.add('hidden');
+        if (!name) { $('#group-name-error').textContent = language === 'bn' ? 'দলের নাম লিখুন।' : 'Enter a group name.'; $('#group-name-error').classList.remove('hidden'); $('#group-name').focus(); return; }
+        $('#save-group').disabled = true;
+        try {
+          await request('/admin/access/', { method:'POST', body:JSON.stringify({ name }) });
+          $('#group-dialog').close(); activeAccessTab = 'groups'; $('#access-search').value = '';
+          notify(language === 'bn' ? 'দল তৈরি হয়েছে।' : 'Group created.'); await loadAccess();
+        } catch (error) {
+          const fieldError = error.payload?.errors?.name;
+          if (fieldError) { $('#group-name-error').textContent = fieldError; $('#group-name-error').classList.remove('hidden'); }
+          else { $('#group-form-error').textContent = error.message; $('#group-form-error').classList.remove('hidden'); }
+        } finally { $('#save-group').disabled = false; }
+      }
+      function openUserDialog() {
+        $('#user-form').reset(); $('#user-form-error').classList.add('hidden');
+        ['username','email','new-password'].forEach((key) => $(`#${key}-error`).classList.add('hidden'));
+        $('#new-user-role').value = 'staff'; $('#user-dialog').showModal(); $('#new-username').focus();
+      }
+      async function saveUser(event) {
+        event.preventDefault();
+        $('#user-form-error').classList.add('hidden');
+        ['username','email','new-password'].forEach((key) => $(`#${key}-error`).classList.add('hidden'));
+        const body = { username:$('#new-username').value.trim(), email:$('#new-email').value.trim(), password:$('#new-user-password').value, role:$('#new-user-role').value };
+        if (body.password.length < 10) { $('#new-password-error').textContent = language === 'bn' ? 'পাসওয়ার্ড অন্তত ১০ অক্ষরের হতে হবে।' : 'Use at least 10 characters.'; $('#new-password-error').classList.remove('hidden'); $('#new-user-password').focus(); return; }
+        $('#save-user').disabled = true;
+        try {
+          await request('/admin/users/', { method:'POST', body:JSON.stringify(body) });
+          $('#user-dialog').close(); activeAccessTab = 'users'; $('#access-search').value = '';
+          notify(language === 'bn' ? 'নতুন অ্যাকাউন্ট তৈরি হয়েছে।' : 'Account created.'); await loadAccess();
+        } catch (error) {
+          const errors = error.payload?.errors;
+          if (errors) Object.entries(errors).forEach(([key, value]) => { const field = key === 'password' ? 'new-password' : key; const target = $(`#${field}-error`); if (target) { target.textContent = value; target.classList.remove('hidden'); } });
+          else { $('#user-form-error').textContent = error.message; $('#user-form-error').classList.remove('hidden'); }
+        } finally { $('#save-user').disabled = false; }
+      }
+      let passwordUserId = null;
+      function openPasswordDialog(userId) {
+        const user = accessData.users.find((entry) => entry.id === userId); if (!user) return;
+        passwordUserId = userId; $('#password-form').reset(); $('#password-form-error').classList.add('hidden'); $('#changed-password-error').classList.add('hidden');
+        $('#password-user-label').textContent = `@${user.username}`; $('#password-dialog').showModal(); $('#changed-password').focus();
+      }
+      async function savePassword(event) {
+        event.preventDefault(); $('#password-form-error').classList.add('hidden'); $('#changed-password-error').classList.add('hidden');
+        const password = $('#changed-password').value;
+        if (password.length < 10) { $('#changed-password-error').textContent = language === 'bn' ? 'পাসওয়ার্ড অন্তত ১০ অক্ষরের হতে হবে।' : 'Use at least 10 characters.'; $('#changed-password-error').classList.remove('hidden'); $('#changed-password').focus(); return; }
+        if (password !== $('#changed-password-confirm').value) { $('#password-form-error').textContent = language === 'bn' ? 'দুটি পাসওয়ার্ড মেলেনি।' : 'The passwords do not match.'; $('#password-form-error').classList.remove('hidden'); $('#changed-password-confirm').focus(); return; }
+        $('#save-password').disabled = true;
+        try {
+          await request(`/admin/users/${passwordUserId}/password/`, { method:'POST', body:JSON.stringify({ password }) });
+          $('#password-dialog').close(); notify(language === 'bn' ? 'পাসওয়ার্ড বদলানো হয়েছে।' : 'Password changed.');
+        } catch (error) { $('#password-form-error').textContent = error.message; $('#password-form-error').classList.remove('hidden'); }
+        finally { $('#save-password').disabled = false; }
+      }
+      function closeSidebar() { $('#admin-sidebar').dataset.open = 'false'; $('#mobile-backdrop').dataset.open = 'false'; $('#mobile-backdrop').classList.add('hidden'); }
+      function openSidebar() { $('#admin-sidebar').dataset.open = 'true'; $('#mobile-backdrop').dataset.open = 'true'; $('#mobile-backdrop').classList.remove('hidden'); }
+      function statusBadge(item, featured = false) {
+        if (featured) return item.is_featured ? `<span class="admin-state admin-state-featured">${esc(text('featured'))}</span>` : `<span class="admin-state admin-state-normal">${esc(text('standard'))}</span>`;
+        return item.is_published ? `<span class="admin-state admin-state-live">${esc(text('published'))}</span>` : `<span class="admin-state admin-state-draft">${esc(text('draft'))}</span>`;
+      }
+      function date(value) {
+        return new Intl.DateTimeFormat(language === 'bn' ? 'bn-BD' : 'en-US', { year:'numeric', month:'short', day:'numeric' }).format(new Date(value));
+      }
+      function emptyState() { return `<div class="flex flex-col items-center gap-2 px-5 py-10 text-center"><span class="grid size-10 place-items-center rounded-full bg-surface-brand text-brand">${icon('files')}</span><h3 class="font-display font-semibold">${esc(text('noCaptions'))}</h3><p class="text-sm text-muted">${esc(text('firstCaption'))}</p>${permissions.add ? `<button data-new-caption class="primary-action mt-2 inline-flex min-h-10 items-center gap-2 rounded-md bg-brand px-3 text-sm font-semibold text-white">${icon('plus')}<span>${esc(text('newCaption'))}</span></button>` : ''}</div>`; }
+      function tableMarkup(items, recent = false) {
+        if (!items.length) return emptyState();
+        const rows = items.map((item) => `<tr data-row-id="${item.id}">${recent ? '' : `<td class="w-10 px-3 py-3" data-label=""><input class="row-check size-4 accent-brand" type="checkbox" value="${item.id}" aria-label="Select ${esc(item.text)}" /></td>`}<td class="px-3 py-3 font-medium text-ink" data-label="caption"><a class="row-caption hover:text-brand" data-edit-id="${item.id}" href="#">${esc(item.text)}</a></td><td class="px-3 py-3 text-muted" data-label="${esc(text('category'))}">${esc(item.category)}</td>${recent ? `<td class="px-3 py-3" data-label="${esc(text('status'))}">${statusBadge(item)}</td>` : `<td class="px-3 py-3 text-muted" data-label="${esc(text('likes'))}">${new Intl.NumberFormat(language === 'bn' ? 'bn-BD' : 'en-US').format(item.likes)}</td><td class="px-3 py-3" data-label="${esc(text('featuredColumn'))}">${statusBadge(item, true)}</td><td class="px-3 py-3" data-label="${esc(text('status'))}">${statusBadge(item)}</td>`}<td class="px-3 py-3 text-muted" data-label="${esc(text('created'))}">${date(item.updated_at)}</td>${recent ? `<td class="px-3 py-3 text-right">${icon('arrow')}</td>` : `<td class="px-3 py-2 text-right" data-label=""><div class="flex justify-end gap-1">${permissions.change ? `<button data-edit-id="${item.id}" class="grid size-8 place-items-center rounded text-muted hover:bg-surface-brand hover:text-brand" aria-label="Edit ${esc(item.text)}">${icon('edit')}</button>` : ''}${permissions.delete ? `<button data-delete-id="${item.id}" class="grid size-8 place-items-center rounded text-muted hover:bg-accent/5 hover:text-accent" aria-label="Delete ${esc(item.text)}">${icon('trash')}</button>` : ''}</div></td>`}</tr>`).join('');
+        const headers = recent ? ['caption','category','status','created',''] : ['','caption','category','likes','featuredColumn','status','created',''];
+        const sortFields = { caption:'text', category:'category', likes:'likes', created:'created_at' };
+        return `<table class="admin-table text-left text-sm"><thead class="bg-surface-muted text-[11px] font-semibold uppercase tracking-wide text-muted"><tr>${headers.map((key) => `<th class="px-3 py-3">${key ? (sortFields[key] && !recent ? `<button data-sort="${sortFields[key]}" class="inline-flex items-center gap-1 hover:text-brand">${esc(text(key === 'caption' ? 'captionText' : key))}</button>` : esc(text(key === 'caption' ? 'captionText' : key))) : (!recent ? '<input id="select-all" type="checkbox" class="size-4 accent-brand" aria-label="Select all captions">' : '')}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`;
+      }
+      async function loadCaptions() {
+        const params = new URLSearchParams({ page:String(currentPage), page_size:'20', ordering });
+        if ($('#caption-search').value.trim()) params.set('q', $('#caption-search').value.trim());
+        if ($('#category-filter').value) params.set('category', $('#category-filter').value);
+        if ($('#status-filter').value) params.set('status', $('#status-filter').value);
+        if ($('#featured-filter').value) params.set('featured', $('#featured-filter').value);
+        $('#caption-table').innerHTML = `<div class="space-y-2 p-3">${Array.from({length:5}, () => '<div class="skeleton h-12 rounded-md"></div>').join('')}</div>`;
+        try {
+          const data = await request(`/admin/captions/?${params}`); captions = data.results; categories = data.categories; totalPages = data.pages || 1;
+          $('#caption-table').innerHTML = tableMarkup(captions);
+          $('#caption-count').textContent = new Intl.NumberFormat(language === 'bn' ? 'bn-BD' : 'en-US').format(data.count);
+          $('#list-summary').textContent = `${new Intl.NumberFormat(language === 'bn' ? 'bn-BD' : 'en-US').format(data.count)} ${text('allCaptions').toLowerCase()}`;
+          $('#page-label').textContent = `${text('pageOf')} ${new Intl.NumberFormat(language === 'bn' ? 'bn-BD' : 'en-US').format(currentPage)} / ${new Intl.NumberFormat(language === 'bn' ? 'bn-BD' : 'en-US').format(totalPages)}`;
+          $('#previous-page').disabled = currentPage <= 1; $('#next-page').disabled = currentPage >= totalPages;
+          const currentCategory = $('#category-filter').value;
+          $('#category-filter').innerHTML = `<option value="">${esc(text('allCategories'))}</option>${categories.map((category) => `<option value="${esc(category)}">${esc(category)}</option>`).join('')}`;
+          $('#category-filter').value = currentCategory;
+          $('#category-options').innerHTML = categories.map((category) => `<option value="${esc(category)}"></option>`).join('');
+          updateBulkBar();
+        } catch (error) {
+          if (error.status === 401) { showLogin(); return; }
+          $('#caption-table').innerHTML = `<div class="p-5 text-sm text-accent" role="alert">${esc(error.message || text('loadError'))}</div>`;
+        }
+      }
+      async function renderDashboard() {
+        if (!permissions.view) return;
+        try {
+          const data = await request('/admin/captions/?page=1&page_size=8&ordering=-updated_at');
+          const drafts = data.results.filter((item) => !item.is_published).slice(0, 5);
+          $('#draft-count').textContent = new Intl.NumberFormat(language === 'bn' ? 'bn-BD' : 'en-US').format(drafts.length);
+          $('#draft-list').innerHTML = drafts.length ? drafts.map((item) => `<div class="flex items-center gap-3 border-b border-border px-4 py-3 last:border-0"><span class="size-2 shrink-0 rounded-full bg-accent"></span><div class="min-w-0 flex-1"><button data-edit-id="${item.id}" class="block max-w-full truncate text-left text-sm font-medium hover:text-brand">${esc(item.text)}</button><span class="text-xs text-muted">${esc(item.category)} · ${esc(text('draft'))}</span></div><button data-edit-id="${item.id}" class="grid size-8 place-items-center rounded text-muted hover:bg-surface-muted" aria-label="Edit caption">${icon('arrow')}</button></div>`).join('') : `<div class="flex items-center gap-3 px-4 py-4"><span class="grid size-8 place-items-center rounded-full bg-surface-brand text-brand">${icon('check')}</span><div><strong class="text-sm">${esc(text('allCaughtUp'))}</strong><p class="text-xs text-muted">${esc(text('noDrafts'))}</p></div></div>`;
+          $('#recent-list').innerHTML = `<table class="admin-table text-left text-sm"><thead class="bg-surface-muted text-[11px] font-semibold uppercase tracking-wide text-muted"><tr><th class="px-3 py-3">${esc(text('captionText'))}</th><th class="px-3 py-3">${esc(text('category'))}</th><th class="px-3 py-3">${esc(text('status'))}</th><th class="px-3 py-3">${esc(text('updated'))}</th><th></th></tr></thead><tbody>${tableMarkup(data.results, true).replace(/^.*?<tbody>/s, '').replace(/<\/tbody><\/table>$/s, '')}</tbody></table>`;
+        } catch (error) { $('#draft-list').innerHTML = `<p class="p-4 text-sm text-accent">${esc(error.message || text('loadError'))}</p>`; }
+      }
+      function openEditor(item = null) {
+        $('#caption-form').reset(); $('#form-error').classList.add('hidden'); $$('.field-error').forEach((node) => node.classList.add('hidden'));
+        $('#caption-id').value = item?.id || ''; $('#caption-text').value = item?.text || ''; $('#caption-category').value = item?.category || categories[0] || 'অনুভূতি'; $('#caption-author').value = item?.author || '';
+        $('#caption-published').checked = item ? item.is_published : true; $('#caption-featured').checked = item ? item.is_featured : false;
+        $('#char-count').textContent = String($('#caption-text').value.length); $('#dialog-title').textContent = item ? (language === 'bn' ? 'ক্যাপশন সম্পাদনা' : 'Edit caption') : text('newCaption');
+        $('#caption-dialog').showModal(); $('#caption-text').focus();
+      }
+      function updateBulkBar() {
+        const selected = $$('.row-check:checked'); $('#selected-count').textContent = String(selected.length);
+        $('#bulk-bar').classList.toggle('hidden', !selected.length); $('#bulk-bar').classList.toggle('flex', !!selected.length);
+      }
+      function showDelete(itemIds) {
+        pendingDelete = itemIds;
+        const names = itemIds.map((id) => captions.find((item) => item.id === id)?.text).filter(Boolean);
+        $('#delete-description').textContent = itemIds.length === 1 ? (language === 'bn' ? `“${names[0]}” মুছে যাবে। এই কাজটি ফিরিয়ে নেওয়া যাবে না।` : `“${names[0]}” will be deleted. This cannot be undone.`) : (language === 'bn' ? `${itemIds.length}টি নির্বাচিত ক্যাপশন মুছে যাবে। এই কাজটি ফিরিয়ে নেওয়া যাবে না।` : `${itemIds.length} selected captions will be deleted. This cannot be undone.`);
+        $('#delete-dialog').showModal();
+      }
+      async function saveCaption(event) {
+        event.preventDefault();
+        $$('.field-error').forEach((node) => node.classList.add('hidden')); $('#form-error').classList.add('hidden');
+        const id = $('#caption-id').value;
+        const body = { text:$('#caption-text').value, category:$('#caption-category').value, author:$('#caption-author').value, is_published:$('#caption-published').checked, is_featured:$('#caption-featured').checked };
+        if (!body.text.trim()) { const field=$('[data-error="text"]'); field.textContent=language==='bn'?'ক্যাপশন লিখুন।':'Caption text is required.'; field.classList.remove('hidden'); $('#caption-text').focus(); return; }
+        $('#save-caption').disabled = true;
+        try { await request(id ? `/admin/captions/${id}/` : '/admin/captions/', { method:id?'PATCH':'POST', body:JSON.stringify(body) }); $('#caption-dialog').close(); notify(text('saveOk')); currentPage=1; await loadCaptions(); await renderDashboard(); }
+        catch (error) { const errors=error.payload?.errors; if (errors) Object.entries(errors).forEach(([key,value])=>{const field=$(`[data-error="${key}"]`);if(field){field.textContent=value;field.classList.remove('hidden')}}); else { $('#form-error').textContent=error.message; $('#form-error').classList.remove('hidden');} }
+        finally { $('#save-caption').disabled = false; }
+      }
+      async function deleteConfirmed() {
+        if (!pendingDelete) return;
+        const ids = pendingDelete; $('#confirm-delete').disabled = true;
+        try {
+          if (ids.length === 1) await request(`/admin/captions/${ids[0]}/`, { method:'DELETE' });
+          else await request('/admin/captions/bulk/', { method:'POST', body:JSON.stringify({ action:'delete', ids }) });
+          $('#delete-dialog').close(); notify(text('deleteOk')); pendingDelete=null; await loadCaptions(); await renderDashboard();
+        } catch (error) { notify(error.message, 'error'); }
+        finally { $('#confirm-delete').disabled = false; }
+      }
+      async function runBulk() {
+        const ids = $$('.row-check:checked').map((node) => Number(node.value)); const action=$('#bulk-action').value;
+        if (!ids.length || !action) { notify(language==='bn'?'ক্যাপশন ও কাজ বেছে নিন।':'Choose captions and an action.', 'error'); return; }
+        if (action === 'delete') { showDelete(ids); return; }
+        try { await request('/admin/captions/bulk/', { method:'POST', body:JSON.stringify({action,ids}) }); notify(text('bulkOk')); await loadCaptions(); await renderDashboard(); }
+        catch (error) { notify(error.message, 'error'); }
+      }
+      async function initialize() {
+        setLanguage(language);
+        try {
+          const session = await request('/admin/session/'); csrfToken=session.csrfToken; permissions=session.permissions;
+          if (session.authenticated) { $('#user-name').dataset.username=session.username; showApp(); $('#access-label').classList.toggle('hidden', !permissions.view_users && !permissions.view_groups); $('#access-nav').classList.toggle('hidden', !permissions.view_users && !permissions.view_groups); if (!permissions.add) $$('.primary-action').forEach((node)=>node.remove()); if (!permissions.change) $('#bulk-action').querySelectorAll('option:not([value=""]):not([value="delete"])').forEach((o)=>o.remove()); if (!permissions.delete) $('#bulk-action').querySelector('option[value="delete"]').remove(); const requestedView=new URLSearchParams(location.search).get('view'); const view=requestedView==='captions'?'captions':requestedView==='access'?'access':'overview';setView(view); }
+          else showLogin();
+        } catch { $('#login-error').textContent=text('loadError'); $('#login-error').classList.remove('hidden'); showLogin(); }
+      }
+
+      $('#login-form').addEventListener('submit', async (event) => {
+        event.preventDefault(); $('#login-error').classList.add('hidden'); const button=$('#login-submit');button.disabled=true;
+        try { const data=await request('/admin/login/',{method:'POST',body:JSON.stringify({username:$('#username').value,password:$('#password').value})});csrfToken=data.csrfToken;$('#user-name').dataset.username=data.username;const session=await request('/admin/session/');csrfToken=session.csrfToken;permissions=session.permissions;showApp();setView('overview'); }
+        catch(error){$('#login-error').textContent=error.message;$('#login-error').classList.remove('hidden');}
+        finally{button.disabled=false;}
+      });
+      $('#logout-button').addEventListener('click',async()=>{try{await request('/admin/logout/',{method:'POST'});}catch{}showLogin();});
+      $('#language-select').addEventListener('change',(event)=>setLanguage(event.target.value));
+      $$('[data-view-link]').forEach((button)=>button.addEventListener('click',()=>setView(button.dataset.viewLink)));
+      $$('[data-access-tab]').forEach((button)=>button.addEventListener('click',()=>{activeAccessTab=button.dataset.accessTab;renderAccess();}));
+      $('#access-search').addEventListener('input',()=>{clearTimeout(searchTimer);searchTimer=setTimeout(loadAccess,180);});
+      $('#sidebar-add').addEventListener('click',()=>openEditor());
+      $$('[data-new-caption]').forEach((button)=>button.addEventListener('click',()=>openEditor()));
+      $('#view-all').addEventListener('click',()=>setView('captions'));
+      $('#view-drafts').addEventListener('click',()=>{setView('captions');$('#status-filter').value='draft';currentPage=1;loadCaptions();});
+      $('#caption-search').addEventListener('input',()=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>{currentPage=1;loadCaptions();},180);});
+      ['#category-filter','#status-filter','#featured-filter'].forEach((selector)=>$(selector).addEventListener('change',()=>{currentPage=1;loadCaptions();}));
+      $('#previous-page').addEventListener('click',()=>{if(currentPage>1){currentPage--;loadCaptions();}});
+      $('#next-page').addEventListener('click',()=>{if(currentPage<totalPages){currentPage++;loadCaptions();}});
+      $('#caption-table').addEventListener('change',(event)=>{if(event.target.matches('.row-check'))updateBulkBar();if(event.target.id==='select-all'){$$('.row-check').forEach((checkbox)=>checkbox.checked=event.target.checked);updateBulkBar();}});
+      $('#caption-table').addEventListener('click',(event)=>{const sort=event.target.closest('[data-sort]');const edit=event.target.closest('[data-edit-id]');const del=event.target.closest('[data-delete-id]');if(sort){const field=sort.dataset.sort;ordering=ordering===field?`-${field}`:field;currentPage=1;loadCaptions();return;}if(edit){event.preventDefault();const item=captions.find((entry)=>entry.id===Number(edit.dataset.editId));if(item)openEditor(item);}if(del)showDelete([Number(del.dataset.deleteId)]);});
+      $('#run-bulk').addEventListener('click',runBulk);
+      $('#create-group-button').addEventListener('click',openGroupDialog);
+      $('#group-form').addEventListener('submit',saveGroup);
+      $('#cancel-group').addEventListener('click',()=>$('#group-dialog').close());
+      $('#close-group-dialog').addEventListener('click',()=>$('#group-dialog').close());
+      $('#create-user-button').addEventListener('click',openUserDialog);
+      $('#user-form').addEventListener('submit',saveUser);
+      $('#cancel-user').addEventListener('click',()=>$('#user-dialog').close());
+      $('#close-user-dialog').addEventListener('click',()=>$('#user-dialog').close());
+      $('#access-list').addEventListener('click',(event)=>{const button=event.target.closest('[data-password-user]');if(button)openPasswordDialog(Number(button.dataset.passwordUser));});
+      $('#password-form').addEventListener('submit',savePassword);
+      $('#cancel-password').addEventListener('click',()=>$('#password-dialog').close());
+      $('#close-password-dialog').addEventListener('click',()=>$('#password-dialog').close());
+      $('#caption-form').addEventListener('submit',saveCaption);
+      $('#caption-text').addEventListener('input',()=>$('#char-count').textContent=String($('#caption-text').value.length));
+      $$('[data-close-dialog]').forEach((button)=>button.addEventListener('click',()=>$('#caption-dialog').close()));
+      $('#cancel-delete').addEventListener('click',()=>$('#delete-dialog').close());$('#confirm-delete').addEventListener('click',deleteConfirmed);
+      $('#menu-button').addEventListener('click',openSidebar);$('#mobile-backdrop').addEventListener('click',closeSidebar);
+      $('#global-search').addEventListener('focus',()=>{setView('captions');$('#caption-search').value=$('#global-search').value;$('#caption-search').focus();});
+      $('#global-search').addEventListener('input',()=>{if(!$('#captions-view').classList.contains('hidden')){$('#caption-search').value=$('#global-search').value;$('#caption-search').dispatchEvent(new Event('input'));}});
+      $('#column-button').addEventListener('click',()=>$('#column-menu').classList.toggle('hidden'));
+      document.addEventListener('click',(event)=>{if(event.target.closest('#column-button'))return;if(!event.target.closest('#column-menu'))$('#column-menu').classList.add('hidden');});
+      function buildColumnMenu(){const menu=$('#column-menu');menu.innerHTML=[['category','category'],['likes','likes'],['featuredColumn','featuredColumn'],['status','status'],['created','created']].map(([key,label])=>`<label class="flex cursor-pointer items-center gap-2 px-2 py-1.5 text-xs"><input type="checkbox" checked data-column="${key}" class="accent-brand"><span>${esc(text(label))}</span></label>`).join('');menu.querySelectorAll('[data-column]').forEach((checkbox)=>checkbox.addEventListener('change',()=>{const index={category:2,likes:3,featuredColumn:4,status:5,created:6}[checkbox.dataset.column];$$(`#caption-table tr > :nth-child(${index+1})`).forEach((cell)=>cell.classList.toggle('hidden',!checkbox.checked));}));}
+      $('#column-button').addEventListener('click',buildColumnMenu);
+      $('#command-search').addEventListener('input',()=>{const q=$('#command-search').value.trim().toLowerCase();$$('[data-command]').forEach((button)=>button.classList.toggle('hidden',q&&!button.textContent.toLowerCase().includes(q)));});
+      $('#command-search').addEventListener('keydown',(event)=>{if(event.key==='Enter'){event.preventDefault();const q=$('#command-search').value.trim();$('#command-dialog').close();if(q){setView('captions');$('#caption-search').value=q;loadCaptions();}else $$('[data-command]:not(.hidden)')[0]?.click();}});
+      $('#close-command').addEventListener('click',()=>$('#command-dialog').close());
+      $$('[data-command]').forEach((button)=>button.addEventListener('click',()=>{const action=button.dataset.command;$('#command-dialog').close();if(action==='new')openEditor();else setView(action);}));
+      document.addEventListener('keydown',(event)=>{if((event.metaKey||event.ctrlKey)&&event.key.toLowerCase()==='k'){event.preventDefault();$('#command-dialog').showModal();$('#command-search').focus();}if(event.target.matches('input,textarea,select,[contenteditable="true"]')||event.metaKey||event.ctrlKey)return;const key=event.key.toLowerCase();if(key==='n'&&permissions.add)openEditor();if(keyboardPrefix==='g'&&key==='o')setView('overview');if(keyboardPrefix==='g'&&key==='c')setView('captions');keyboardPrefix=key==='g'?'g':'';});
+      initialize();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+{% extends "admin/base.html" %}
+{% load static i18n %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | কথার ঘর{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">{% endblock %}
+{% block branding %}<div id="site-name"><a href="{% url 'admin:index' %}"><span class="admin-brand-mark"><svg class="icon"><use href="#lucide-pen-line"></use></svg></span><span>কথার ঘর <small>কন্টেন্ট স্টুডিও</small></span></a></div>{% endblock %}
+{% block header %}{% endblock %}
+{% block nav-breadcrumbs %}{% endblock %}
+{% block nav-global %}{% endblock %}
+{% block pretitle %}{% if user.is_authenticated %}<div class="workspace-toolbar"><span class="workspace-label">{% if LANGUAGE_CODE == 'en' %}CONTENT STUDIO{% else %}কন্টেন্ট স্টুডিও{% endif %}</span><button class="global-search-trigger" type="button" data-open-command><svg class="icon"><use href="#lucide-search"></use></svg><span>{% if LANGUAGE_CODE == 'en' %}Search captions and pages{% else %}ক্যাপশন ও পেজ খুঁজুন{% endif %}</span><kbd>Ctrl K</kbd></button></div>{% endif %}{% endblock %}
+{% block responsive %}{{ block.super }}<link rel="stylesheet" href="{% static 'admin/css/bengali_admin.css' %}">{% endblock %}
+{% block footer %}
+<div class="admin-footer"><span class="footer-brand"><svg class="icon"><use href="#lucide-pen-line"></use></svg> কথার ঘর <span>·</span> {% if LANGUAGE_CODE == 'en' %}Content Studio{% else %}কন্টেন্ট স্টুডিও{% endif %}</span><div class="footer-actions"><form class="language-switch" action="{% url 'set_language' %}" method="post">{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><label class="visually-hidden" for="admin-language">Language</label><svg class="icon"><use href="#lucide-languages"></use></svg><select id="admin-language" name="language" aria-label="Language" onchange="this.form.submit()"><option value="bn"{% if LANGUAGE_CODE == 'bn' %} selected{% endif %}>বাংলা</option><option value="en"{% if LANGUAGE_CODE == 'en' %} selected{% endif %}>English</option></select><button class="button button-quiet" type="submit">{% if LANGUAGE_CODE == 'en' %}Apply{% else %}বদলান{% endif %}</button></form><a href="/" target="_blank" class="footer-link"><svg class="icon"><use href="#lucide-external-link"></use></svg>{% if LANGUAGE_CODE == 'en' %}View site{% else %}সাইট দেখুন{% endif %}</a>{% if user.is_authenticated %}<form method="post" action="{% url 'admin:logout' %}">{% csrf_token %}<button class="footer-link" type="submit"><svg class="icon"><use href="#lucide-log-out"></use></svg>{% if LANGUAGE_CODE == 'en' %}Log out{% else %}লগ আউট{% endif %}</button></form>{% endif %}</div></div>
+{% endblock %}
+{% block extrabody %}{{ block.super }}
+<svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <symbol id="lucide-pen-line" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"/></symbol>
+  <symbol id="lucide-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></symbol>
+  <symbol id="lucide-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="lucide-layout-dashboard" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol>
+  <symbol id="lucide-files" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v14"/><path d="M18 8H10a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-10a2 2 0 0 0-2-2Z"/><path d="M8 6h10"/></symbol>
+  <symbol id="lucide-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="lucide-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="lucide-log-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></symbol>
+  <symbol id="lucide-languages" viewBox="0 0 24 24"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></symbol>
+  <symbol id="lucide-check-circle" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></symbol>
+  <symbol id="lucide-circle-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></symbol>
+  <symbol id="lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="lucide-more-horizontal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></symbol>
+  <symbol id="lucide-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="lucide-command" viewBox="0 0 24 24"><path d="M18 8a3 3 0 1 0-3-3v14a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V5a3 3 0 1 0-3 3Z"/></symbol>
+  <symbol id="lucide-x" viewBox="0 0 24 24"><path d="m18 6-12 12M6 6l12 12"/></symbol>
+</svg>
+{% if user.is_authenticated %}
+<dialog class="command-palette" id="command-palette" aria-labelledby="command-title"><div class="command-head"><svg class="icon"><use href="#lucide-search"></use></svg><input id="command-input" type="search" autocomplete="off" placeholder="{% if LANGUAGE_CODE == 'en' %}Search captions or go to a page{% else %}ক্যাপশন খুঁজুন বা পেজে যান{% endif %}" aria-label="{% if LANGUAGE_CODE == 'en' %}Search captions or go to a page{% else %}ক্যাপশন খুঁজুন বা পেজে যান{% endif %}"><button type="button" data-close-command aria-label="Close"><svg class="icon"><use href="#lucide-x"></use></svg></button></div><h2 id="command-title">{% if LANGUAGE_CODE == 'en' %}Quick navigation{% else %}দ্রুত নেভিগেশন{% endif %}</h2><a href="{% url 'admin:index' %}" data-command-item><svg class="icon"><use href="#lucide-layout-dashboard"></use></svg>{% if LANGUAGE_CODE == 'en' %}Overview{% else %}ওভারভিউ{% endif %}<kbd>G O</kbd></a><a href="{% url 'admin:captions_caption_changelist' %}" data-command-item><svg class="icon"><use href="#lucide-files"></use></svg>{% if LANGUAGE_CODE == 'en' %}Captions{% else %}ক্যাপশনসমূহ{% endif %}<kbd>G C</kbd></a><a href="{% url 'admin:captions_caption_add' %}" data-command-item><svg class="icon"><use href="#lucide-plus"></use></svg>{% if LANGUAGE_CODE == 'en' %}New caption{% else %}নতুন ক্যাপশন{% endif %}<kbd>N</kbd></a><p class="command-hint">{% if LANGUAGE_CODE == 'en' %}Press Enter to search captions. Escape to close.{% else %}ক্যাপশন খুঁজতে Enter চাপুন, বন্ধ করতে Esc.{% endif %}</p></dialog>
+<script src="{% static 'admin/js/bengali_admin.js' %}" defer></script>
+{% endif %}{% endblock %}
