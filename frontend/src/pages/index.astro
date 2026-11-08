@@ -42,6 +42,10 @@ const adminUrl = import.meta.env.PUBLIC_ADMIN_URL || '/admin/';
         </div>
         <div class="results-line"><span id="result-count">ক্যাপশন খোঁজা হচ্ছে...</span><button id="clear-search" class="clear-search" hidden>মুছে ফেলুন <i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
         <div class="caption-grid" id="caption-grid" aria-live="polite"></div>
+        <aside class="native-ad-slot" aria-label="বিজ্ঞাপন">
+          <span class="ad-label">বিজ্ঞাপন</span>
+          <div id="container-af15d5b3e0a492748fe63621166c4508"></div>
+        </aside>
         <div class="empty-state" id="empty-state" hidden><i class="fa-solid fa-feather-pointed" aria-hidden="true"></i><h3>কোনো ক্যাপশন পাওয়া যায়নি।</h3><p>অন্য শব্দ দিয়ে খুঁজে দেখুন।</p></div>
         <div class="load-error" id="load-error" hidden>ক্যাপশন লোড করা যায়নি। সার্ভার চালু আছে কি না দেখে <button id="retry">আবার চেষ্টা করুন</button>।</div>
       </section>
@@ -151,5 +155,7 @@ const adminUrl = import.meta.env.PUBLIC_ADMIN_URL || '/admin/';
       document.addEventListener('keydown', (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); search.focus(); } });
       updateSavedCount(); load();
     </script>
+    <script is:inline data-cfasync="false" src="https://bauval.org/14/ee69069b03d075340f20a696584b6c1e"></script>
+    <script is:inline async="async" data-cfasync="false" src="https://bauval.org/21/af15d5b3e0a492748fe63621166c4508"></script>
   </body>
 </html>

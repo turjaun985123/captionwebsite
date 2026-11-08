@@ -18,3 +18,7 @@ body{background-color:#f8f5ed;background-image:radial-gradient(ellipse at 10% 14
 .saved-filter i{font-size:11px}
 .saved-filter span{font-size:10px;color:#b74439}
 @media(max-width:580px){.filter-tools{align-items:flex-start}.saved-filter{white-space:nowrap}}
+
+.native-ad-slot{display:flex;flex-direction:column;align-items:center;gap:4px;width:min(100%,340px);min-height:270px;margin:24px auto 0;color:var(--muted)}
+.ad-label{font-size:10px;line-height:1.4;letter-spacing:.04em}
+#container-af15d5b3e0a492748fe63621166c4508{display:grid;place-items:center;width:100%;min-height:250px}
