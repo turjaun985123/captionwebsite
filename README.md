@@ -29,3 +29,9 @@ Caption reads, writes, login sessions, and likes are handled by Django. The Astr
 Django uses local SQLite by default. To use the configured Turso database, copy `backend/.env.example` to `backend/.env` and set `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`. The local `.env` is ignored by Git. Then run `python manage.py migrate`; the backend uses Django's ORM with the `django-libsql-backend` driver. The existing captions and admin account have already been copied to the configured Turso database.
 
 Remote Turso connections use HTTP. The Django driver documents that remote transactions are buffered and best-effort, so keep migrations and bulk write operations small and verify critical changes. Without Turso environment variables, development falls back to `backend/db.sqlite3`.
+
+## Deploy frontend and backend together on Render
+
+This repository includes a single-service Docker deployment. In Render, choose **New → Blueprint**, connect this repository, and apply `render.yaml`. Enter `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` when prompted. Render builds Astro into the Django image, then Django serves the public site at `/`, the admin at `/admin/`, and the API at `/api/` from the same origin. The container applies Django migrations when it starts.
+
+For a manual web service, use the repository root and the included `Dockerfile`. Set `DJANGO_SECRET_KEY` to a generated secret and `DJANGO_DEBUG=0`; set Turso credentials in Render's Environment page. Do not put credentials in `render.yaml` or commit a `.env` file.
